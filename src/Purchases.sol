@@ -4,6 +4,8 @@ import "./Ideas.sol";
 import "./Token.sol";
 
 contract Purchases is Ideas, Token {
+    using StringUtil for string;
+
     event MakePurchase(address indexed purchaser, string appId, string purchaseId, uint256 cost);
 
     struct Purchase {
@@ -15,15 +17,11 @@ contract Purchases is Ideas, Token {
 
     mapping(address => Purchase[]) private purchases;
 
-    function getPurchaseByAddress(address _owner, uint256 _purchaseId) view public returns(bool exist, uint256 purchaseId, string appId, uint256 cost, uint256 timestamp) {
-        if(!isExistPurchase(_owner, _purchaseId)) {
-            (exist, idOfPurchase) = (false, _purchaseId);
-        }
-        Purchase storage purchase = purchases[_owner][_purchaseId];
-        return (true, purchase.purchaseId, purchase.appId, purchase.cost, purchase.timestamp);
-    }
-
     function makePurchase(string _appId, string _purchaseId, uint256 _cost) public {
+        require(!_appId.isEmpty());
+        require(!_purchaseId.isEmpty());
+        require(cost > 0);
+
         transfer(owner, _cost);
         Purchase memory purchase = Purchase({
             appId: _appId,
@@ -33,6 +31,14 @@ contract Purchases is Ideas, Token {
         });
         purchases[msg.sender].push(purchase);
         MakePurchase(msg.sender, _appId, _purchaseId, _cost);
+    }
+
+    function getPurchaseByAddress(address _owner, uint256 _purchaseId) view public returns(bool exist, uint256 purchaseId, string appId, uint256 cost, uint256 timestamp) {
+        if(!isExistPurchase(_owner, _purchaseId)) {
+            (exist, idOfPurchase) = (false, _purchaseId);
+        }
+        Purchase storage purchase = purchases[_owner][_purchaseId];
+        return (true, purchase.purchaseId, purchase.appId, purchase.cost, purchase.timestamp);
     }
 
     function isExistPurchase(address _owner, uint256 _purchaseId) view private returns(bool) {

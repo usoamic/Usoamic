@@ -1,6 +1,10 @@
 pragma solidity ^0.4.0;
 
+import "../library/StringUtil.sol";
+
 contract Notes {
+    using StringUtil for string;
+
     enum NoteVisibility {
         PUBLIC,
         UNLISTED
@@ -31,6 +35,8 @@ contract Notes {
     }
 
     function addNote(NoteVisibility _visibility, string _content) private {
+        require(!_content.isEmpty());
+
         Note memory note = Note({
             refId: _visibility == NoteVisibility.PUBLIC ? notes.length : -1,
             visibility: _visibility,
