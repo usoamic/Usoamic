@@ -33,15 +33,15 @@ contract Purchases is Notes, Token {
         MakePurchase(msg.sender, _appId, _purchaseId, _cost);
     }
 
-    function getPurchaseByAddress(address _owner, uint256 _purchaseId) view public returns(bool exist, uint256 purchaseId, string appId, uint256 cost, uint256 timestamp) {
-        if(!isExistPurchase(_owner, _purchaseId)) {
-            (exist, purchaseId) = (false, _purchaseId);
+    function getPurchaseByAddress(address _owner, uint256 _id) view public returns(bool exist, uint256 id, string purchaseId, string appId, uint256 cost, uint256 timestamp) {
+        if(!isExistPurchase(_owner, _id)) {
+            (exist, id) = (false, _id);
         }
-        Purchase storage purchase = purchases[_owner][_purchaseId];
-        return (true, purchase.purchaseId, purchase.appId, purchase.cost, purchase.timestamp);
+        Purchase storage purchase = purchases[_owner][_id];
+        return (true, _id, purchase.purchaseId, purchase.appId, purchase.cost, purchase.timestamp);
     }
 
-    function isExistPurchase(address _owner, uint256 _purchaseId) view private returns(bool) {
-        return ((_purchaseId < purchases[_owner].length) && (_purchaseId >= 0));
+    function isExistPurchase(address _owner, uint256 _id) view private returns(bool) {
+        return ((_id < purchases[_owner].length) && (_id >= 0));
     }
 }
