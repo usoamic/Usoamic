@@ -32,7 +32,7 @@ contract TransactionExplorer is Purchases {
 
     function getTransactionByAddress(address _owner, uint256 _txId) public view returns(bool exist, uint256 txId, address from, address to, uint256 value, uint256 timestamp) {
         if(!isExistTransactionBySender(_owner, _txId)) {
-            (exist, idOfTx) = (false, _txId);
+            (exist, txId) = (false, _txId);
             return;
         }
         Transaction storage tx = addressTransactions[_owner][_txId];
@@ -41,7 +41,7 @@ contract TransactionExplorer is Purchases {
 
     function getTransaction(uint256 _txId) public view returns(bool exist, uint256 txId, address from, address to, uint256 value, uint256 timestamp) {
         if(!isExistTransaction(_txId)) {
-            (exist, idOfTx) = (false, _txId);
+            (exist, txId) = (false, _txId);
             return;
         }
         Transaction storage tx = transactions[_txId];
