@@ -23,6 +23,8 @@ contract Notes is Ideas {
         address author;
     }
 
+    event AddNote(address indexed author, uint256 refId, string content, uint256 timestamp);
+
     mapping(address => uint256) private numberOfNotes;
     mapping(address => mapping(uint256 => Note)) private addressNotes;
     mapping(uint256 => NoteRef) private notes;
@@ -56,6 +58,7 @@ contract Notes is Ideas {
                 author: msg.sender
             });
             numberOfPublicNotes++;
+            AddNote(msg.sender, numberOfPublicNotes, _content, now);
         }
 
         numberOfNotes[msg.sender]++;
