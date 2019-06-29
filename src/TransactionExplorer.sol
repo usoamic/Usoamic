@@ -36,7 +36,7 @@ contract TransactionExplorer is Purchases {
         numberOfTransactions++;
     }
 
-    function addTransactionToAddress(address _owner, uint256 txId) private {
+    function addTransactionToAddress(address _owner) private {
         addressTransactions[msg.sender][numberOfAddressTransactions[msg.sender]] = numberOfTransactions;
         numberOfAddressTransactions[_owner]++;
     }
