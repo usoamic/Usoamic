@@ -4,6 +4,8 @@ import "./Ideas.sol";
 import "./Token.sol";
 
 contract Purchases is Ideas, Token {
+    event MakePurchase(address indexed purchaser, string appId, string purchaseId, uint256 cost);
+
     struct Purchase {
         string appId;
         string purchaseId;
@@ -22,5 +24,6 @@ contract Purchases is Ideas, Token {
             timestamp: now
         });
         purchases[msg.sender].push(purchase);
+        MakePurchase(msg.sender, _appId, _purchaseId, _cost);
     }
 }
