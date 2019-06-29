@@ -126,7 +126,7 @@ contract Ideas is Owner {
         return (true, _ideaId, idea.author, idea.description, idea.status, idea.timestamp, idea.numberOfSupporters, idea.numberOfAbstained, idea.numberOfVotedAgainst, idea.numberOfParticipants);
     }
 
-    function getVote(uint256 _ideaId, uint256 _voteId) view public returns(bool exist, uint256 ideaId, uint256 idOfVote, address voter, VoteType voteType, string comment) {
+    function getVote(uint256 _ideaId, uint256 _voteId) view public returns(bool exist, uint256 ideaId, uint256 voteId, address voter, VoteType voteType, string comment) {
         if (isExistIdea(_ideaId)) {
             Idea storage idea = ideas[_ideaId];
             Vote storage vote = idea.votes[_voteId];
