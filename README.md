@@ -1,4 +1,4 @@
 # Usoamic
-Contract address: 0x6A7a3e04de8CAc3005B05f25d710F1436b66638d
+Contract address: 0xced17a0ae3ca557b5960d6386c7e877b09be3b89
 
 Coin supply: 12500000
