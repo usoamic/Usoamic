@@ -79,11 +79,11 @@ contract Notes is Ideas {
         return getNoteByAddress(noteRef.author, noteRef.noteId);
     }
 
-    function numberOfPublicNotes() public {
+    function getNumberOfPublicNotes() public {
         return numberOfPublicNotes;
     }
 
-    function numberOfNotesByAddress(address _author) public {
+    function getNumberOfNotesByAddress(address _author) public {
         return numberOfNotes[_author];
     }
 

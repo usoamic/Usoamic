@@ -47,7 +47,7 @@ contract Purchases is Notes, Token {
         return (true, _id, purchase.purchaseId, purchase.appId, purchase.cost, purchase.timestamp);
     }
 
-    function numberOfPurchaseByAddress(address _owner) public {
+    function getNumberOfPurchaseByAddress(address _owner) public {
         return numberOfPurchases[_owner];
     }
 

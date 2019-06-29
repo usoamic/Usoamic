@@ -59,11 +59,11 @@ contract TransactionExplorer is Purchases {
         return getTransactionByAddress(tx.from, _txId);
     }
 
-    function numberOfTransactions() public {
+    function getNumberOfTransactions() public {
         return numberOfTransactions;
     }
 
-    function numberOfTransactionsByAddress(address _owner) public {
+    function getNumberOfTransactionsByAddress(address _owner) public {
         return numberOfAddressTransactions[_owner];
     }
 

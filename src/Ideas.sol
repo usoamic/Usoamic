@@ -138,7 +138,7 @@ contract Ideas is Owner {
         return;
     }
 
-    function numberOfIdeas() public {
+    function getNumberOfIdeas() public {
         return numberOfIdeas;
     }
 }
