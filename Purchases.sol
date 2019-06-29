@@ -1,6 +1,8 @@
 pragma solidity ^0.4.0;
 
-contract Purchases {
+import "./Ideas.sol";
+
+contract Purchases is Ideas {
     struct Purchase {
         string appId;
         string purchaseId;
