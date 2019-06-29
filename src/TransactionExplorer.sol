@@ -6,7 +6,6 @@ contract TransactionExplorer is Purchases {
     using AddressUtil for address;
 
     struct Transaction {
-        uint256 txId;
         address from;
         address to;
         uint256 value;
@@ -41,13 +40,13 @@ contract TransactionExplorer is Purchases {
         numberOfAddressTransactions[_owner]++;
     }
 
-    function getTransactionByAddress(address _owner, uint256 _txNumber) public view returns(bool exist, uint256 txId, uint256 txNumber, address from, address to, uint256 value, uint256 timestamp) {
-        if(!isExistTransactionBySender(_owner, _txNumber)) {
-            (exist, txId) = (false, _txNumber);
+    function getTransactionByAddress(address _owner, uint256 _txNumber) public view returns(bool exist, uint256 txId, address from, address to, uint256 value, uint256 timestamp) {
+        if(!isExistTransactionBySender(_txId, _txNumber)) {
+            (exist) = (false);
             return;
         }
-        Transaction storage tx = addressTransactions[_owner][_txNumber];
-        return (true, txId_txNumber, tx.from, tx.to, tx.value, tx.timestamp);
+        uint256 _txId = addressTransactions[_owner][_txNumber];
+        return getTransaction(_txId);
     }
 
     function getTransaction(uint256 _txId) public view returns(bool exist, uint256 txId, address from, address to, uint256 value, uint256 timestamp) {
@@ -55,8 +54,8 @@ contract TransactionExplorer is Purchases {
             (exist, txId) = (false, _txId);
             return;
         }
-        TransactionRef storage tx = transactions[_txId];
-        return getTransactionByAddress(tx.from, _txId);
+        Transaction storage tx = transactions[_txId];
+        return (true, _txId, tx.from, tx.to, tx.value, tx.timestamp);
     }
 
     function getNumberOfTransactions() public {
