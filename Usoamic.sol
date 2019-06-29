@@ -5,7 +5,7 @@ import "./Purchases.sol";
 
 interface tokenRecipient { function receiveApproval(address _from, uint256 _value, address _token, bytes _extraData) public; }
 
-contract Usoamic is BlockExplorer, Purchases {
+contract Usoamic is TransactionExplorer, Purchases {
     using AddressUtil for address;
 
     uint256 public totalSupply;
