@@ -1,8 +1,8 @@
 pragma solidity ^0.4.0;
 
-import "../library/StringUtil.sol";
+import "./Ideas.sol";
 
-contract Notes {
+contract Notes is Ideas {
     using StringUtil for string;
 
     enum NoteVisibility {

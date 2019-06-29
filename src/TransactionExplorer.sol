@@ -1,8 +1,8 @@
 pragma solidity ^0.4.18;
 
-import "../library/AddressUtil.sol";
+import "./Purchases.sol";
 
-contract TransactionExplorer {
+contract TransactionExplorer is Purchases {
     using AddressUtil for address;
 
     struct Transaction {

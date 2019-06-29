@@ -1,9 +1,9 @@
 pragma solidity ^0.4.0;
 
-import "./Ideas.sol";
 import "./Token.sol";
+import "./Notes.sol";
 
-contract Purchases is Ideas, Token {
+contract Purchases is Notes, Token {
     using StringUtil for string;
 
     event MakePurchase(address indexed purchaser, string appId, string purchaseId, uint256 cost);
