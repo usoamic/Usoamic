@@ -15,8 +15,6 @@ contract TransactionExplorer {
     mapping(address => Transaction[]) private addressTransactions;
     Transaction[] private transactions;
 
-    function BlockExplorer() { }
-
     function addTransaction(address _to, uint256 _value) internal {
         require(_value > 0);
 
