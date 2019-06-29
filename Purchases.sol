@@ -17,7 +17,7 @@ contract Purchases {
             purchaseId: _purchaseId,
             cost: _cost,
             timestamp: now
-            });
+        });
         purchases[msg.sender].push(purchase);
     }
 }
