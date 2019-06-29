@@ -7,8 +7,8 @@ contract Purchases is Ideas, Token {
     event MakePurchase(address indexed purchaser, string appId, string purchaseId, uint256 cost);
 
     struct Purchase {
-        string appId;
         string purchaseId;
+        string appId;
         uint256 cost;
         uint256 timestamp;
     }
