@@ -15,7 +15,7 @@ contract TransactionExplorer {
     mapping(address => Transaction[]) private addressTransactions;
     Transaction[] private transactions;
 
-    function addTransaction(address _to, uint256 _value) internal {
+    function addTransaction(address _to, uint256 _value) onlyUnfrozen internal {
         require(_value > 0);
 
         Transaction memory tx = Transaction({

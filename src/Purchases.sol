@@ -17,7 +17,7 @@ contract Purchases is Ideas, Token {
 
     mapping(address => Purchase[]) private purchases;
 
-    function makePurchase(string _appId, string _purchaseId, uint256 _cost) public {
+    function makePurchase(string _appId, string _purchaseId, uint256 _cost) onlyUnfrozen public {
         require(!_appId.isEmpty());
         require(!_purchaseId.isEmpty());
         require(cost > 0);

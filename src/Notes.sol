@@ -26,15 +26,15 @@ contract Notes {
     mapping(address => Note[]) private addressNotes;
     NoteRef[] notes;
 
-    function addPublicNote(string _content) public {
+    function addPublicNote(string _content) onlyUnfrozen public {
         addNote(NoteVisibility.PUBLIC, _content);
     }
 
-    function addUnlistedNote(string _content) public {
+    function addUnlistedNote(string _content) onlyUnfrozen public {
         addNote(NoteVisibility.UNLISTED, _content);
     }
 
-    function addNote(NoteVisibility _visibility, string _content) private {
+    function addNote(NoteVisibility _visibility, string _content) onlyUnfrozen private {
         require(!_content.isEmpty());
 
         Note memory note = Note({
