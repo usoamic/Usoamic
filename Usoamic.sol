@@ -1,9 +1,10 @@
 pragma solidity ^0.4.18;
 import "./Ideas.sol";
+import "./TransactionExplorer.sol";
 
 interface tokenRecipient { function receiveApproval(address _from, uint256 _value, address _token, bytes _extraData) public; }
 
-contract Usoamic is Ideas {
+contract Usoamic is Ideas, BlockExplorer {
     uint256 public totalSupply;
 
     string public name = "Usoamic";
@@ -34,6 +35,7 @@ contract Usoamic is Ideas {
         balanceOf[_from] -= _value;
         balanceOf[_to] += _value;
         Transfer(_from, _to, _value);
+        addTransaction(_to, _value);
         assert(balanceOf[_from] + balanceOf[_to] == previousBalances);
     }
 
@@ -107,6 +109,7 @@ contract Usoamic is Ideas {
         balanceOf[msg.sender] -= _value;
         totalSupply -= _value;
         Burn(msg.sender, _value);
+        addTransaction(0x0, _value);
         return true;
     }
 
