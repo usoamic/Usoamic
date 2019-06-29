@@ -117,7 +117,7 @@ contract Ideas is Owner {
         return ((_ideaId < numberOfIdeas) && (_ideaId >= 0));
     }
 
-    function getIdea(uint256 _ideaId) view public returns(bool exist, uint256 idOfIdea, address author, string description, IdeaStatus ideaStatus, uint256 timestamp, uint256 numberOfSupporters, uint256 numberOfAbstained, uint256 numberOfVotedAgainst, uint256 numberOfParticipants) {
+    function getIdea(uint256 _ideaId) view public returns(bool exist, uint256 ideaId, address author, string description, IdeaStatus ideaStatus, uint256 timestamp, uint256 numberOfSupporters, uint256 numberOfAbstained, uint256 numberOfVotedAgainst, uint256 numberOfParticipants) {
         if (!isExistIdea(_ideaId)) {
             (exist, idOfIdea) = (false, _ideaId);
             return;
@@ -126,7 +126,7 @@ contract Ideas is Owner {
         return (true, _ideaId, idea.author, idea.description, idea.status, idea.timestamp, idea.numberOfSupporters, idea.numberOfAbstained, idea.numberOfVotedAgainst, idea.numberOfParticipants);
     }
 
-    function getVote(uint256 _ideaId, uint256 _voteId) view public returns(bool exist, uint256 idOfIdea, uint256 idOfVote, address voter, VoteType voteType, string comment) {
+    function getVote(uint256 _ideaId, uint256 _voteId) view public returns(bool exist, uint256 ideaId, uint256 idOfVote, address voter, VoteType voteType, string comment) {
         if (isExistIdea(_ideaId)) {
             Idea storage idea = ideas[_ideaId];
             Vote storage vote = idea.votes[_voteId];
