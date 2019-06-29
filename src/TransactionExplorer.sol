@@ -60,6 +60,14 @@ contract TransactionExplorer is Purchases {
         return (true, _txId, tx.from, tx.to, tx.value, tx.timestamp);
     }
 
+    function numberOfTransactions() public {
+        return numberOfTransactions;
+    }
+
+    function numberOfTransactionsByAddress(address _owner) public {
+        return numberOfAddressTransactions[_owner];
+    }
+
     function isExistTransactionBySender(address _owner, uint256 _txId) view private returns(bool) {
         return ((_txId < numberOfAddressTransactions[_owner]) && (_txId >= 0));
     }
