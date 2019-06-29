@@ -1,8 +1,10 @@
 pragma solidity ^0.4.18;
-import "./StringUtil.sol";
 import "./Owner.sol";
+import "./library/StringUtil.sol";
 
-contract Ideas is StringUtil, Owner {
+contract Ideas is Owner {
+    using StringUtil for string;
+
     struct Idea {
         address author;
         string description;
@@ -41,7 +43,7 @@ contract Ideas is StringUtil, Owner {
     mapping (uint256 => Idea) private ideas;
 
     function addIdea(string description) onlyUnfrozen public {
-        require(!isEmptyString(description));
+        require(!description.isEmpty());
 
         uint ideaId = numberOfIdeas;
 
