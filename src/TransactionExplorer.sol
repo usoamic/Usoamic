@@ -30,12 +30,12 @@ contract TransactionExplorer {
         transactions.push(tx);
     }
 
-    function getTransactionByAddress(address addr, uint256 txId) public view returns(bool exist, uint256 idOfTx, address from, address to, uint256 value, uint256 timestamp) {
-        if(!isExistTransactionBySender(addr, txId)) {
+    function getTransactionByAddress(address owner, uint256 txId) public view returns(bool exist, uint256 idOfTx, address from, address to, uint256 value, uint256 timestamp) {
+        if(!isExistTransactionBySender(owner, txId)) {
             (exist, idOfTx) = (false, txId);
             return;
         }
-        Transaction storage tx = addressTransactions[addr][txId];
+        Transaction storage tx = addressTransactions[owner][txId];
         return (true, txId, tx.from, tx.to, tx.value, tx.timestamp);
     }
 
@@ -48,8 +48,8 @@ contract TransactionExplorer {
         return (true, txId, tx.from, tx.to, tx.value, tx.timestamp);
     }
 
-    function isExistTransactionBySender(address addr, uint256 txId) view private returns(bool) {
-        return ((txId < addressTransactions[addr].length) && (txId >= 0));
+    function isExistTransactionBySender(address owner, uint256 txId) view private returns(bool) {
+        return ((txId < addressTransactions[owner].length) && (txId >= 0));
     }
 
     function isExistTransaction(uint256 txId) view private returns(bool) {
