@@ -8,7 +8,7 @@ contract Usoamic is Ideas {
 
     string public name = "Usoamic";
     string public symbol = "USO";
-    string public version = "1";
+    string public version = "2";
     uint256 public coinSupply = 12500000;
     uint256 public decimals = 8;
 
