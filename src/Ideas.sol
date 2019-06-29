@@ -134,7 +134,7 @@ contract Ideas is Owner {
                 return (true, _ideaId, _voteId, vote.voter, vote.voteType, vote.comment);
             }
         }
-        (exist, ideaId, idOfVote) = (false, _ideaId, _voteId);
+        (exist, ideaId, voteId) = (false, _ideaId, _voteId);
         return;
     }
 
