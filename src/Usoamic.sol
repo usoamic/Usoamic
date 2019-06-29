@@ -16,7 +16,7 @@ contract Usoamic is TransactionExplorer, Purchases {
     uint256 public coinSupply = 12500000;
     uint256 public decimals = 8;
 
-    mapping (address => uint256) public balanceOf;
+    mapping (address => uint256) private balanceOf;
     mapping (address => mapping (address => uint256)) public allowance;
 
     event Transfer(address indexed from, address indexed to, uint256 value);
@@ -25,6 +25,10 @@ contract Usoamic is TransactionExplorer, Purchases {
     function Usoamic() public {
         totalSupply = coinSupply * 10 ** decimals; 
         balanceOf[msg.sender] = totalSupply;
+    }
+
+    function balanceOf(address owner) public view returns (uint256 balance) {
+        return balanceOf[owner];
     }
 
     /**
