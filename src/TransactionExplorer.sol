@@ -30,7 +30,7 @@ contract TransactionExplorer {
         transactions.push(tx);
     }
 
-    function getTransactionByAddress(address _owner, uint256 _txId) public view returns(bool exist, uint256 idOfTx, address from, address to, uint256 value, uint256 timestamp) {
+    function getTransactionByAddress(address _owner, uint256 _txId) public view returns(bool exist, uint256 txId, address from, address to, uint256 value, uint256 timestamp) {
         if(!isExistTransactionBySender(_owner, _txId)) {
             (exist, idOfTx) = (false, _txId);
             return;
@@ -39,7 +39,7 @@ contract TransactionExplorer {
         return (true, _txId, tx.from, tx.to, tx.value, tx.timestamp);
     }
 
-    function getTransaction(uint256 _txId) public view returns(bool exist, uint256 idOfTx, address from, address to, uint256 value, uint256 timestamp) {
+    function getTransaction(uint256 _txId) public view returns(bool exist, uint256 txId, address from, address to, uint256 value, uint256 timestamp) {
         if(!isExistTransaction(_txId)) {
             (exist, idOfTx) = (false, _txId);
             return;
