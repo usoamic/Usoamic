@@ -41,4 +41,12 @@ contract TransactionExplorer {
         Transaction storage tx = transactions[id];
         return (tx.from, tx.to, tx.value, tx.timestamp);
     }
+
+    function isExistTransactionBySender(uint256 txId) view private returns(bool) {
+        return ((txId < addressTransactions[msg.sender].length) && (txId >= 0));
+    }
+
+    function isExistTransaction(uint256 txId) view private returns(bool) {
+        return ((txId < transactions.length) && (txId >= 0));
+    }
 }
