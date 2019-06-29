@@ -22,8 +22,8 @@ contract TransactionExplorer is Purchases {
     function addTransaction(address _to, uint256 _value) onlyUnfrozen internal {
         require(_value > 0);
 
-        putTransaction(msg.sender);
-        putTransaction(_to);
+        addTransactionToAddress(msg.sender);
+        addTransactionToAddress(_to);
 
         transactions[numberOfTransactions] = Transaction({
             txId: numberOfTransactions,
