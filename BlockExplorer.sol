@@ -17,17 +17,17 @@ contract BlockExplorer {
 
     function BlockExplorer() { }
 
-    function addTransaction(address to, uint256 value) private {
-        require(!to.isEmpty && value > 0);
+    function addTransaction(address _to, uint256 _value) private {
+        require(_value > 0);
 
         Transaction tx = Transaction({
             from: msg.sender,
-            to: to,
-            value: value,
+            to: _to,
+            value: _value,
             timestamp: now
         });
 
-        addressTransactions[to].push(tx);
+        addressTransactions[_to].push(tx);
         addressTransactions[msg.sender].push(tx);
         transactions.push(tx);
     }
