@@ -25,6 +25,10 @@ contract Notes {
         addNote(NoteVisibility.PUBLIC, content);
     }
 
+    function addUnlistedNote(string content) public {
+        addNote(NoteVisibility.UNLISTED, content);
+    }
+
     function addNote(NoteVisibility visibility, string content) private {
         Note memory note = Note({
             visibility: visibility,
