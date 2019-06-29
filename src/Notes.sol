@@ -49,7 +49,7 @@ contract Notes {
         }
     }
 
-    function getNoteByAddress(address _author, uint256 _noteId) view public returns(bool exist, uint256 idOfNote, NoteVisibility visibility, int256 refId, string content, address author, uint256 timestamp) {
+    function getNoteByAddress(address _author, uint256 _noteId) view public returns(bool exist, uint256 noteId, NoteVisibility visibility, int256 refId, string content, address author, uint256 timestamp) {
         if (!isExistNoteByAuthor(_author, _noteId)) {
             (exist, idOfNote) = (false, _noteId);
             return;
@@ -58,7 +58,7 @@ contract Notes {
         return (true, _noteId, note.visibility, note.refId, note.content, note.author, note.timestamp);
     }
 
-    function getNote(uint256 _noteId) view public returns(bool exist, uint256 idOfNote, NoteVisibility visibility, int256 refId, string content, address author, uint256 timestamp) {
+    function getNote(uint256 _noteId) view public returns(bool exist, uint256 noteId, NoteVisibility visibility, int256 refId, string content, address author, uint256 timestamp) {
         if(!isExistNoteRef(_noteId)) {
             (exist, idOfNote) = (false, _noteId);
             return;
