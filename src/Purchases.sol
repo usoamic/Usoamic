@@ -47,11 +47,11 @@ contract Purchases is Notes, Token {
         return (true, _id, purchase.purchaseId, purchase.appId, purchase.cost, purchase.timestamp);
     }
 
-    function getNumberOfPurchaseByAddress(address _owner) public {
+    function getNumberOfPurchaseByAddress(address _owner) view public returns (uint256) {
         return numberOfPurchases[_owner];
     }
 
     function isExistPurchase(address _owner, uint256 _id) view private returns(bool) {
-        return ((_id < purchases[_owner].length) && (_id >= 0));
+        return ((_id < numberOfPurchases[_owner]) && (_id >= 0));
     }
 }

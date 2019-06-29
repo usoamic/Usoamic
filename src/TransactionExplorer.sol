@@ -25,7 +25,6 @@ contract TransactionExplorer is Purchases {
         addTransactionToAddress(_to);
 
         transactions[numberOfTransactions] = Transaction({
-            txId: numberOfTransactions,
             from: msg.sender,
             to: _to,
             value: _value,
@@ -41,7 +40,7 @@ contract TransactionExplorer is Purchases {
     }
 
     function getTransactionByAddress(address _owner, uint256 _txNumber) public view returns(bool exist, uint256 txId, address from, address to, uint256 value, uint256 timestamp) {
-        if(!isExistTransactionBySender(_txId, _txNumber)) {
+        if(!isExistTransactionBySender(_owner, _txNumber)) {
             (exist) = (false);
             return;
         }
@@ -58,11 +57,11 @@ contract TransactionExplorer is Purchases {
         return (true, _txId, tx.from, tx.to, tx.value, tx.timestamp);
     }
 
-    function getNumberOfTransactions() public {
+    function getNumberOfTransactions() view public returns (uint256) {
         return numberOfTransactions;
     }
 
-    function getNumberOfTransactionsByAddress(address _owner) public {
+    function getNumberOfTransactionsByAddress(address _owner) view public returns (uint256) {
         return numberOfAddressTransactions[_owner];
     }
 
