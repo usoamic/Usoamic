@@ -1,9 +1,9 @@
 pragma solidity ^0.4.18;
-import "./Owner.sol";
-import "./library/StringUtil.sol";
-import "./Token.sol";
 
-contract Ideas is Owner, Token {
+import "./library/StringUtil.sol";
+import "./Owner.sol";
+
+contract Ideas is Owner {
     using StringUtil for string;
 
     struct Idea {
@@ -55,7 +55,7 @@ contract Ideas is Owner, Token {
         ideas[ideaId] = Idea({
             author: msg.sender,
             description: description,
-            status: VoteType.DISCUSSION,
+            status: IdeaStatus.DISCUSSION,
             timestamp: now,
             numberOfSupporters: 0,
             numberOfAbstained: 0,
@@ -71,7 +71,7 @@ contract Ideas is Owner, Token {
         Idea storage idea = ideas[ideaId];
    
         require(!idea.participants[msg.sender]);
-        require(idea.status == VoteType.DISCUSSION);
+        require(idea.status == IdeaStatus.DISCUSSION);
 
         if (voteType == VoteType.SUPPORT) {
             idea.numberOfSupporters++;
@@ -108,7 +108,7 @@ contract Ideas is Owner, Token {
         voteForIdea(VoteType.ABSTAIN, id, comment);
     }
 
-    function setIdeaStatus(uint256 ideaId, uint status) onlyOwner public {
+    function setIdeaStatus(uint256 ideaId, IdeaStatus status) onlyOwner public {
         ideas[ideaId].status = status;
         SetIdeaStatus(ideaId, status);
     }
@@ -117,7 +117,7 @@ contract Ideas is Owner, Token {
         return ((ideaId < numberOfIdeas) && (ideaId >= 0));
     }
 
-    function getIdea(uint256 ideaId) view public returns(bool exist, uint256 idOfIdea, address author, string description, uint idOfStatus, uint256 timestamp, uint256 numberOfSupporters, uint256 numberOfAbstained, uint256 numberOfVotedAgainst, uint256 numberOfParticipants) {
+    function getIdea(uint256 ideaId) view public returns(bool exist, uint256 idOfIdea, address author, string description, IdeaStatus ideaStatus, uint256 timestamp, uint256 numberOfSupporters, uint256 numberOfAbstained, uint256 numberOfVotedAgainst, uint256 numberOfParticipants) {
         if (!isExistIdea(ideaId)) {
             (exist, idOfIdea) = (false, ideaId);
             return;
