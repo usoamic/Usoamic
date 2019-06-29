@@ -20,4 +20,20 @@ contract Notes {
 
     mapping(address => Note[]) private addressNotes;
     NoteRef[] notes;
+
+    function addNote(NoteVisibility visibility, string content) private {
+        Note memory note = Note({
+            visibility: visibility,
+            author: msg.sender,
+            content: content,
+            timestamp: now
+        });
+        addressNotes[msg.sender].push(note);
+
+        NoteRef memory noteRef = NoteRef({
+            noteId: notes.length,
+            author: msg.sender
+        });
+        notes.push(noteRef);
+    }
 }
