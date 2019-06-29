@@ -79,6 +79,14 @@ contract Notes is Ideas {
         return getNoteByAddress(noteRef.author, noteRef.noteId);
     }
 
+    function numberOfPublicNotes() public {
+        return numberOfPublicNotes;
+    }
+
+    function numberOfNotesByAddress(address _author) public {
+        return numberOfNotes[_author];
+    }
+
     function isExistNoteByAuthor(address _author, uint256 _noteId) view private returns(bool) {
         return ((_noteId < numberOfNotes[_author]) && (_noteId >= 0));
     }
