@@ -2,7 +2,7 @@ pragma solidity ^0.4.18;
 
 import "./library/AddressUtil.sol";
 
-contract BlockExplorer {
+contract TransactionExplorer {
     using AddressUtil for address;
 
     struct Transaction {
