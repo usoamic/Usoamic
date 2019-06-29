@@ -17,7 +17,7 @@ contract Usoamic is TransactionExplorer, Purchases, Notes {
     uint256 public coinSupply = 12500000;
     uint256 public decimals = 8;
 
-    mapping (address => uint256) private balanceOf;
+    mapping (address => uint256) private balances;
     mapping (address => mapping (address => uint256)) public allowance;
 
     event Transfer(address indexed from, address indexed to, uint256 value);
@@ -25,11 +25,11 @@ contract Usoamic is TransactionExplorer, Purchases, Notes {
 
     function Usoamic() public {
         totalSupply = coinSupply * 10 ** decimals; 
-        balanceOf[msg.sender] = totalSupply;
+        balances[msg.sender] = totalSupply;
     }
 
     function balanceOf(address _owner) public view returns (uint256 balance) {
-        return balanceOf[_owner];
+        return balances[_owner];
     }
 
     /**
@@ -37,14 +37,14 @@ contract Usoamic is TransactionExplorer, Purchases, Notes {
      */
     function _transfer(address _from, address _to, uint _value) onlyUnfrozen internal {
         require(!_to.isEmpty());
-        require(balanceOf[_from] >= _value);
-        require(balanceOf[_to] + _value > balanceOf[_to]);
-        uint previousBalances = balanceOf[_from] + balanceOf[_to];
-        balanceOf[_from] -= _value;
-        balanceOf[_to] += _value;
+        require(balances[_from] >= _value);
+        require(balances[_to] + _value > balances[_to]);
+        uint previousBalances = balances[_from] + balances[_to];
+        balances[_from] -= _value;
+        balances[_to] += _value;
         Transfer(_from, _to, _value);
         addTransaction(_to, _value);
-        assert(balanceOf[_from] + balanceOf[_to] == previousBalances);
+        assert(balances[_from] + balances[_to] == previousBalances);
     }
 
     /**
@@ -113,8 +113,8 @@ contract Usoamic is TransactionExplorer, Purchases, Notes {
      * @param _value the amount of money to burn
      */
     function burn(uint256 _value) onlyUnfrozen public returns (bool success) {
-        require(balanceOf[msg.sender] >= _value);
-        balanceOf[msg.sender] -= _value;
+        require(balances[msg.sender] >= _value);
+        balances[msg.sender] -= _value;
         totalSupply -= _value;
         Burn(msg.sender, _value);
         addTransaction(0x0, _value);
@@ -130,9 +130,9 @@ contract Usoamic is TransactionExplorer, Purchases, Notes {
      * @param _value the amount of money to burn
      */
     function burnFrom(address _from, uint256 _value) onlyUnfrozen public returns (bool success) {
-        require(balanceOf[_from] >= _value);
+        require(balances[_from] >= _value);
         require(_value <= allowance[_from][msg.sender]);
-        balanceOf[_from] -= _value;
+        balances[_from] -= _value;
         allowance[_from][msg.sender] -= _value;
         totalSupply -= _value;
         Burn(_from, _value);
