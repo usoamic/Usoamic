@@ -8,6 +8,7 @@ contract Notes {
 
     struct Note {
         NoteVisibility visibility;
+        int256 refId;
         address author;
         string content;
         uint256 timestamp;
@@ -31,6 +32,7 @@ contract Notes {
 
     function addNote(NoteVisibility visibility, string content) private {
         Note memory note = Note({
+            refId: visibility == NoteVisibility.PUBLIC ? notes.length : -1,
             visibility: visibility,
             author: msg.sender,
             content: content,
@@ -38,10 +40,12 @@ contract Notes {
         });
         addressNotes[msg.sender].push(note);
 
-        NoteRef memory noteRef = NoteRef({
-            noteId: notes.length,
-            author: msg.sender
-        });
-        notes.push(noteRef);
+        if(visibility == NoteVisibility.PUBLIC) {
+            NoteRef memory noteRef = NoteRef({
+                noteId: addressNotes[msg.sender].length,
+                author: msg.sender
+            });
+            notes.push(noteRef);
+        }
     }
 }
