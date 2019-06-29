@@ -1,7 +1,15 @@
 pragma solidity ^0.4.0;
 
 contract Notes {
-    function Notes(){
+    enum NoteType {
+        PUBLIC,
+        PRIVATE
+    }
 
+    struct Note {
+        NoteType type;
+        address author;
+        string content;
+        uint256 timestamp;
     }
 }
