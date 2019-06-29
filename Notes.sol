@@ -12,4 +12,9 @@ contract Notes {
         string content;
         uint256 timestamp;
     }
+
+    struct NoteRef {
+        uint256 noteId;
+        address author;
+    }
 }
