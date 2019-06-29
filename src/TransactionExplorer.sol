@@ -12,22 +12,34 @@ contract TransactionExplorer is Purchases {
         uint256 timestamp;
     }
 
-    mapping(address => Transaction[]) private addressTransactions;
-    Transaction[] private transactions;
+    struct TransactionRef {
+        uint256 txId;
+        address sender;
+    }
+
+    mapping(address => uint256) private numberOfAddressTransactions;
+    mapping(address => mapping(uint256 => Transaction)) private addressTransactions;
+    mapping(uint256 => TransactionRef) private transactions;
+
+    uint256 private numberOfTransactions = 0;
 
     function addTransaction(address _to, uint256 _value) onlyUnfrozen internal {
         require(_value > 0);
 
-        Transaction memory tx = Transaction({
+        addressTransactions[_to][numberOfAddressTransactions[msg.sender]] = Transaction({
             from: msg.sender,
             to: _to,
             value: _value,
             timestamp: now
         });
 
-        addressTransactions[_to].push(tx);
-        addressTransactions[msg.sender].push(tx);
-        transactions.push(tx);
+        transactions[numberOfTransactions] = TransactionRef({
+            txId: msg.sender,
+            sender: msg.sender
+        });
+
+        numberOfAddressTransactions[msg.sender]++;
+        numberOfTransactions++;
     }
 
     function getTransactionByAddress(address _owner, uint256 _txId) public view returns(bool exist, uint256 txId, address from, address to, uint256 value, uint256 timestamp) {
@@ -49,10 +61,10 @@ contract TransactionExplorer is Purchases {
     }
 
     function isExistTransactionBySender(address _owner, uint256 _txId) view private returns(bool) {
-        return ((_txId < addressTransactions[_owner].length) && (_txId >= 0));
+        return ((_txId < numberOfAddressTransactions[_owner]) && (_txId >= 0));
     }
 
     function isExistTransaction(uint256 _txId) view private returns(bool) {
-        return ((_txId < transactions.length) && (_txId >= 0));
+        return ((_txId < numberOfTransactions) && (_txId >= 0));
     }
 }
