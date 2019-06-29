@@ -57,7 +57,7 @@ contract Notes is Ideas {
 
     function getNoteByAddress(address _author, uint256 _noteId) view public returns(bool exist, uint256 noteId, NoteVisibility visibility, int256 refId, string content, address author, uint256 timestamp) {
         if (!isExistNoteByAuthor(_author, _noteId)) {
-            (exist, idOfNote) = (false, _noteId);
+            (exist, noteId) = (false, _noteId);
             return;
         }
         Note storage note = addressNotes[_author][_noteId];
@@ -66,7 +66,7 @@ contract Notes is Ideas {
 
     function getNote(uint256 _noteId) view public returns(bool exist, uint256 noteId, NoteVisibility visibility, int256 refId, string content, address author, uint256 timestamp) {
         if(!isExistNoteRef(_noteId)) {
-            (exist, idOfNote) = (false, _noteId);
+            (exist, noteId) = (false, _noteId);
             return;
         }
         NoteRef storage noteRef = notes[_noteId];
