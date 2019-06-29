@@ -11,11 +11,11 @@ contract Notes is Ideas {
     }
 
     struct Note {
-        NoteVisibility visibility;
-        int256 refId;
+        uint256 refId;
         address author;
         string content;
         uint256 timestamp;
+        NoteVisibility visibility;
     }
 
     struct NoteRef {
@@ -23,8 +23,11 @@ contract Notes is Ideas {
         address author;
     }
 
-    mapping(address => Note[]) private addressNotes;
-    NoteRef[] notes;
+    mapping(address => uint256) private numberOfNotes;
+    mapping(address => mapping(uint256 => Note)) private addressNotes;
+    mapping(uint256 => NoteRef) private notes;
+
+    uint256 private numberOfPublicNotes = 0;
 
     function addPublicNote(string _content) onlyUnfrozen public {
         addNote(NoteVisibility.PUBLIC, _content);
@@ -37,25 +40,28 @@ contract Notes is Ideas {
     function addNote(NoteVisibility _visibility, string _content) onlyUnfrozen private {
         require(!_content.isEmpty());
 
-        Note memory note = Note({
-            refId: _visibility == NoteVisibility.PUBLIC ? notes.length : -1,
+        uint256 numberOfSenderNotes = numberOfNotes[msg.sender];
+
+        addressNotes[msg.sender][numberOfSenderNotes] = Note({
+            refId: (_visibility == NoteVisibility.PUBLIC) ?  numberOfPublicNotes : 0,
             visibility: _visibility,
             author: msg.sender,
             content: _content,
             timestamp: now
         });
-        addressNotes[msg.sender].push(note);
 
         if(_visibility == NoteVisibility.PUBLIC) {
-            NoteRef memory noteRef = NoteRef({
-                noteId: addressNotes[msg.sender].length,
+            notes[numberOfPublicNotes] = NoteRef({
+                noteId: numberOfSenderNotes,
                 author: msg.sender
             });
-            notes.push(noteRef);
+            numberOfPublicNotes++;
         }
+
+        numberOfNotes[msg.sender]++;
     }
 
-    function getNoteByAddress(address _author, uint256 _noteId) view public returns(bool exist, uint256 noteId, NoteVisibility visibility, int256 refId, string content, address author, uint256 timestamp) {
+    function getNoteByAddress(address _author, uint256 _noteId) view public returns(bool exist, uint256 noteId, NoteVisibility visibility, uint256 refId, string content, address author, uint256 timestamp) {
         if (!isExistNoteByAuthor(_author, _noteId)) {
             (exist, noteId) = (false, _noteId);
             return;
@@ -64,7 +70,7 @@ contract Notes is Ideas {
         return (true, _noteId, note.visibility, note.refId, note.content, note.author, note.timestamp);
     }
 
-    function getNote(uint256 _noteId) view public returns(bool exist, uint256 noteId, NoteVisibility visibility, int256 refId, string content, address author, uint256 timestamp) {
+    function getNote(uint256 _noteId) view public returns(bool exist, uint256 noteId, NoteVisibility visibility, uint256 refId, string content, address author, uint256 timestamp) {
         if(!isExistNoteRef(_noteId)) {
             (exist, noteId) = (false, _noteId);
             return;
@@ -74,10 +80,10 @@ contract Notes is Ideas {
     }
 
     function isExistNoteByAuthor(address _author, uint256 _noteId) view private returns(bool) {
-        return ((_noteId < addressNotes[_author].length) && (_noteId >= 0));
+        return ((_noteId < numberOfNotes[_author]) && (_noteId >= 0));
     }
 
     function isExistNoteRef(uint256 _noteId) view private returns(bool) {
-        return ((_noteId < notes.length) && (_noteId >= 0));
+        return ((_noteId < numberOfPublicNotes) && (_noteId >= 0));
     }
 }
