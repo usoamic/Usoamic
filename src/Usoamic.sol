@@ -41,7 +41,7 @@ contract Usoamic is TransactionExplorer {
         balances[_from] -= _value;
         balances[_to] += _value;
         Transfer(_from, _to, _value);
-        addTransactionToAddress(_to, _value);
+        addTransaction(_to, _value);
         assert(balances[_from] + balances[_to] == previousBalances);
     }
 
@@ -115,7 +115,7 @@ contract Usoamic is TransactionExplorer {
         balances[msg.sender] -= _value;
         totalSupply -= _value;
         Burn(msg.sender, _value);
-        addTransactionToAddress(0x0, _value);
+        addTransaction(0x0, _value);
         return true;
     }
 
