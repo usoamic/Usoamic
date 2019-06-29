@@ -15,7 +15,7 @@ contract Purchases is Ideas, Token {
 
     function makePurchase(string _appId, string _purchaseId, uint256 _cost) public {
         transfer(owner, _cost);
-        Purchase purchase = Purchase({
+        Purchase memory purchase = Purchase({
             appId: _appId,
             purchaseId: _purchaseId,
             cost: _cost,

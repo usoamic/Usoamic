@@ -20,7 +20,7 @@ contract TransactionExplorer {
     function addTransaction(address _to, uint256 _value) internal {
         require(_value > 0);
 
-        Transaction tx = Transaction({
+        Transaction memory tx = Transaction({
             from: msg.sender,
             to: _to,
             value: _value,
