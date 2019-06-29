@@ -1,13 +1,13 @@
 pragma solidity ^0.4.0;
 
 contract Notes {
-    enum NoteType {
+    enum NoteVisibility {
         PUBLIC,
-        PRIVATE
+        UNLISTED
     }
 
     struct Note {
-        NoteType type;
+        NoteVisibility visibility;
         address author;
         string content;
         uint256 timestamp;
