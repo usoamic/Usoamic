@@ -15,7 +15,8 @@ contract Purchases is Notes, Token {
         uint256 timestamp;
     }
 
-    mapping(address => Purchase[]) private purchases;
+    mapping(address => mapping(uint256 => Purchase)) private purchases;
+    mapping(address => uint256) private numberOfPurchases;
 
     function makePurchase(string _appId, string _purchaseId, uint256 _cost) onlyUnfrozen public {
         require(!_appId.isEmpty());
@@ -23,13 +24,18 @@ contract Purchases is Notes, Token {
         require(_cost > 0);
 
         transfer(owner, _cost);
-        Purchase memory purchase = Purchase({
+
+        uint256 numberOfPurchase = numberOfPurchases[msg.sender];
+
+        purchases[msg.sender][numberOfPurchase] = Purchase({
             appId: _appId,
             purchaseId: _purchaseId,
             cost: _cost,
             timestamp: now
         });
-        purchases[msg.sender].push(purchase);
+
+        numberOfPurchases[msg.sender]++;
+
         MakePurchase(msg.sender, _appId, _purchaseId, _cost);
     }
 
@@ -39,6 +45,10 @@ contract Purchases is Notes, Token {
         }
         Purchase storage purchase = purchases[_owner][_id];
         return (true, _id, purchase.purchaseId, purchase.appId, purchase.cost, purchase.timestamp);
+    }
+
+    function numberOfPurchaseByAddress(address _owner) public {
+        return numberOfPurchases[_owner];
     }
 
     function isExistPurchase(address _owner, uint256 _id) view private returns(bool) {
