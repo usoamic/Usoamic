@@ -12,7 +12,7 @@ contract Purchases is Ideas {
 
     mapping(address => Purchase[]) private purchases;
 
-    function makePurchase(string _appId, string _purchaseId, uint256 _cost) {
+    function makePurchase(string _appId, string _purchaseId, uint256 _cost) public {
         transfer(owner, _cost);
         Purchase purchase = Purchase({
             appId: _appId,
