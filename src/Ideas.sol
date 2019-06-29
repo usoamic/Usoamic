@@ -119,7 +119,7 @@ contract Ideas is Owner {
 
     function getIdea(uint256 _ideaId) view public returns(bool exist, uint256 ideaId, address author, string description, IdeaStatus ideaStatus, uint256 timestamp, uint256 numberOfSupporters, uint256 numberOfAbstained, uint256 numberOfVotedAgainst, uint256 numberOfParticipants) {
         if (!isExistIdea(_ideaId)) {
-            (exist, idOfIdea) = (false, _ideaId);
+            (exist, ideaId) = (false, _ideaId);
             return;
         }
         Idea storage idea = ideas[_ideaId];
@@ -134,7 +134,7 @@ contract Ideas is Owner {
                 return (true, _ideaId, _voteId, vote.voter, vote.voteType, vote.comment);
             }
         }
-        (exist, idOfIdea, idOfVote) = (false, _ideaId, _voteId);
+        (exist, ideaId, idOfVote) = (false, _ideaId, _voteId);
         return;
     }
 }
