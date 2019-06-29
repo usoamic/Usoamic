@@ -1,6 +1,9 @@
 pragma solidity ^0.4.18;
 
+import "./library/AddressUtil.sol";
+
 contract Owner {
+    using AddressUtil for address;
     event SetFrozen(bool contractFrozen);
     event SetOwner(address indexed newOwner);
 
@@ -28,7 +31,7 @@ contract Owner {
     }
 
     function setOwner(address newOwner) onlyOwner public {
-        require((owner != newOwner) && (newOwner != 0x0));
+        require((owner != newOwner) && (!newOwner.isEmpty()));
         owner = newOwner;
         SetOwner(newOwner);
     }

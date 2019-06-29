@@ -5,6 +5,8 @@ import "./TransactionExplorer.sol";
 interface tokenRecipient { function receiveApproval(address _from, uint256 _value, address _token, bytes _extraData) public; }
 
 contract Usoamic is Ideas, BlockExplorer {
+    using AddressUtil for address;
+
     uint256 public totalSupply;
 
     string public name = "Usoamic";
@@ -28,7 +30,7 @@ contract Usoamic is Ideas, BlockExplorer {
      * Internal transfer, only can be called by this contract
      */
     function _transfer(address _from, address _to, uint _value) onlyUnfrozen internal {
-        require(_to != 0x0);
+        require(!_to.isEmpty());
         require(balanceOf[_from] >= _value);
         require(balanceOf[_to] + _value > balanceOf[_to]);
         uint previousBalances = balanceOf[_from] + balanceOf[_to];
