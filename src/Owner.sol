@@ -24,15 +24,15 @@ contract Owner {
         _;
     }
 
-    function setFronzen(bool contractFrozen) onlyOwner public {
-        require(frozen != contractFrozen);
-        frozen = contractFrozen;
-        SetFrozen(contractFrozen);
+    function setFronzen(bool _contractFrozen) onlyOwner public {
+        require(frozen != _contractFrozen);
+        frozen = _contractFrozen;
+        SetFrozen(_contractFrozen);
     }
 
-    function setOwner(address newOwner) onlyOwner public {
-        require((owner != newOwner) && (!newOwner.isEmpty()));
-        owner = newOwner;
-        SetOwner(newOwner);
+    function setOwner(address _newOwner) onlyOwner public {
+        require((owner != _newOwner) && (!_newOwner.isEmpty()));
+        owner = _newOwner;
+        SetOwner(_newOwner);
     }
 }

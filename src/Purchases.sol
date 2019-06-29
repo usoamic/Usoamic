@@ -15,11 +15,11 @@ contract Purchases is Ideas, Token {
 
     mapping(address => Purchase[]) private purchases;
 
-    function getPurchaseByAddress(address owner, uint256 purchaseId) view public returns(bool exist, uint256 idOfPurchase, string appId, uint256 cost, uint256 timestamp) {
-        if(!isExistPurchase(owner, purchaseId)) {
-            (exist, idOfPurchase) = (false, purchaseId);
+    function getPurchaseByAddress(address _owner, uint256 _purchaseId) view public returns(bool exist, uint256 idOfPurchase, string appId, uint256 cost, uint256 timestamp) {
+        if(!isExistPurchase(_owner, _purchaseId)) {
+            (exist, idOfPurchase) = (false, _purchaseId);
         }
-        Purchase storage purchase = purchases[owner][purchaseId];
+        Purchase storage purchase = purchases[_owner][_purchaseId];
         return (true, purchase.purchaseId, purchase.appId, purchase.cost, purchase.timestamp);
     }
 
@@ -35,7 +35,7 @@ contract Purchases is Ideas, Token {
         MakePurchase(msg.sender, _appId, _purchaseId, _cost);
     }
 
-    function isExistPurchase(address owner, uint256 purchaseId) view private returns(bool) {
-        return ((purchaseId < purchases[owner].length) && (purchaseId >= 0));
+    function isExistPurchase(address _owner, uint256 _purchaseId) view private returns(bool) {
+        return ((_purchaseId < purchases[_owner].length) && (_purchaseId >= 0));
     }
 }

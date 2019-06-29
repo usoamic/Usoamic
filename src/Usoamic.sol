@@ -27,8 +27,8 @@ contract Usoamic is TransactionExplorer, Purchases {
         balanceOf[msg.sender] = totalSupply;
     }
 
-    function balanceOf(address owner) public view returns (uint256 balance) {
-        return balanceOf[owner];
+    function balanceOf(address _owner) public view returns (uint256 balance) {
+        return balanceOf[_owner];
     }
 
     /**

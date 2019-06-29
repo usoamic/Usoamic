@@ -47,14 +47,14 @@ contract Ideas is Owner {
 
     mapping (uint256 => Idea) private ideas;
 
-    function addIdea(string description) onlyUnfrozen public {
-        require(!description.isEmpty());
+    function addIdea(string _description) onlyUnfrozen public {
+        require(!_description.isEmpty());
 
         uint ideaId = numberOfIdeas;
 
         ideas[ideaId] = Idea({
             author: msg.sender,
-            description: description,
+            description: _description,
             status: IdeaStatus.DISCUSSION,
             timestamp: now,
             numberOfSupporters: 0,
@@ -63,21 +63,21 @@ contract Ideas is Owner {
             numberOfParticipants: 0
         });
         numberOfIdeas++;
-        AddIdea(msg.sender, description, ideaId);
+        AddIdea(msg.sender, _description, ideaId);
     }
 
-    function voteForIdea(VoteType voteType, uint256 ideaId, string comment) onlyUnfrozen private {
-        require(isExistIdea(ideaId));
-        Idea storage idea = ideas[ideaId];
+    function voteForIdea(VoteType _voteType, uint256 _ideaId, string _comment) onlyUnfrozen private {
+        require(isExistIdea(_ideaId));
+        Idea storage idea = ideas[_ideaId];
    
         require(!idea.participants[msg.sender]);
         require(idea.status == IdeaStatus.DISCUSSION);
 
-        if (voteType == VoteType.SUPPORT) {
+        if (_voteType == VoteType.SUPPORT) {
             idea.numberOfSupporters++;
-        } else if (voteType == VoteType.AGAINST) {
+        } else if (_voteType == VoteType.AGAINST) {
             idea.numberOfVotedAgainst++;
-        } else if (voteType == VoteType.ABSTAIN) {
+        } else if (_voteType == VoteType.ABSTAIN) {
             idea.numberOfAbstained++;
         } else {
             revert();
@@ -88,53 +88,53 @@ contract Ideas is Owner {
         uint256 voteId = idea.numberOfParticipants;
 
         idea.votes[voteId] = Vote({
-            voteType: voteType,
-            comment: comment,
+            voteType: _voteType,
+            comment: _comment,
             voter: msg.sender
         });
         idea.numberOfParticipants++;
-        VoteForIdea(msg.sender, voteId, ideaId, voteType, comment);
+        VoteForIdea(msg.sender, voteId, _ideaId, _voteType, _comment);
     }
 
-    function supportIdea(uint256 id, string comment) public {
-        voteForIdea(VoteType.SUPPORT, id, comment);
+    function supportIdea(uint256 _ideaId, string _comment) public {
+        voteForIdea(VoteType.SUPPORT, _ideaId, _comment);
     }
 
-    function againstIdea(uint256 id, string comment) public {
-        voteForIdea(VoteType.AGAINST, id, comment);
+    function againstIdea(uint256 _ideaId, string _comment) public {
+        voteForIdea(VoteType.AGAINST, _ideaId, _comment);
     }
 
-    function abstainIdea(uint256 id, string comment) public {
-        voteForIdea(VoteType.ABSTAIN, id, comment);
+    function abstainIdea(uint256 _ideaId, string _comment) public {
+        voteForIdea(VoteType.ABSTAIN, _ideaId, _comment);
     }
 
-    function setIdeaStatus(uint256 ideaId, IdeaStatus status) onlyOwner public {
-        ideas[ideaId].status = status;
-        SetIdeaStatus(ideaId, status);
+    function setIdeaStatus(uint256 _ideaId, IdeaStatus _status) onlyOwner public {
+        ideas[_ideaId].status = _status;
+        SetIdeaStatus(_ideaId, _status);
     }
 
-    function isExistIdea(uint256 ideaId) view private returns(bool) {
-        return ((ideaId < numberOfIdeas) && (ideaId >= 0));
+    function isExistIdea(uint256 _ideaId) view private returns(bool) {
+        return ((_ideaId < numberOfIdeas) && (_ideaId >= 0));
     }
 
-    function getIdea(uint256 ideaId) view public returns(bool exist, uint256 idOfIdea, address author, string description, IdeaStatus ideaStatus, uint256 timestamp, uint256 numberOfSupporters, uint256 numberOfAbstained, uint256 numberOfVotedAgainst, uint256 numberOfParticipants) {
-        if (!isExistIdea(ideaId)) {
-            (exist, idOfIdea) = (false, ideaId);
+    function getIdea(uint256 _ideaId) view public returns(bool exist, uint256 idOfIdea, address author, string description, IdeaStatus ideaStatus, uint256 timestamp, uint256 numberOfSupporters, uint256 numberOfAbstained, uint256 numberOfVotedAgainst, uint256 numberOfParticipants) {
+        if (!isExistIdea(_ideaId)) {
+            (exist, idOfIdea) = (false, _ideaId);
             return;
         }
-        Idea storage idea = ideas[ideaId];
-        return (true, ideaId, idea.author, idea.description, idea.status, idea.timestamp, idea.numberOfSupporters, idea.numberOfAbstained, idea.numberOfVotedAgainst, idea.numberOfParticipants);
+        Idea storage idea = ideas[_ideaId];
+        return (true, _ideaId, idea.author, idea.description, idea.status, idea.timestamp, idea.numberOfSupporters, idea.numberOfAbstained, idea.numberOfVotedAgainst, idea.numberOfParticipants);
     }
 
-    function getVote(uint256 ideaId, uint256 voteId) view public returns(bool exist, uint256 idOfIdea, uint256 idOfVote, address voter, VoteType voteType, string comment) {
-        if (isExistIdea(ideaId)) {
-            Idea storage idea = ideas[ideaId];
-            Vote storage vote = idea.votes[voteId];
-            if ((voteId < idea.numberOfParticipants) && (voteId >= 0)) {
-                return (true, ideaId, voteId, vote.voter, vote.voteType, vote.comment);
+    function getVote(uint256 _ideaId, uint256 _voteId) view public returns(bool exist, uint256 idOfIdea, uint256 idOfVote, address voter, VoteType voteType, string comment) {
+        if (isExistIdea(_ideaId)) {
+            Idea storage idea = ideas[_ideaId];
+            Vote storage vote = idea.votes[_voteId];
+            if ((_voteId < idea.numberOfParticipants) && (_voteId >= 0)) {
+                return (true, _ideaId, _voteId, vote.voter, vote.voteType, vote.comment);
             }
         }
-        (exist, idOfIdea, idOfVote) = (false, ideaId, voteId);
+        (exist, idOfIdea, idOfVote) = (false, _ideaId, _voteId);
         return;
     }
 }
