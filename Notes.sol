@@ -17,4 +17,7 @@ contract Notes {
         uint256 noteId;
         address author;
     }
+
+    mapping(address => Note[]) private addressNotes;
+    NoteRef[] notes;
 }
