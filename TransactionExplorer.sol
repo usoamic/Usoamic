@@ -30,14 +30,22 @@ contract TransactionExplorer {
         transactions.push(tx);
     }
 
-    function getTransactionByAddress(address addr, uint256 id) public view returns(address from, address to, uint256 value, uint256 timestamp) {
-        Transaction storage tx = addressTransactions[addr][id];
-        return (tx.from, tx.to, tx.value, tx.timestamp);
+    function getTransactionByAddress(address addr, uint256 txId) public view returns(bool exist, uint256 idOfTx, address from, address to, uint256 value, uint256 timestamp) {
+        if(!isExistTransactionBySender(addr, txId)) {
+            (exist, idOfTx) = (false, txId);
+            return;
+        }
+        Transaction storage tx = addressTransactions[addr][txId];
+        return (true, txId, tx.from, tx.to, tx.value, tx.timestamp);
     }
 
-    function getTransaction(uint256 id) public view returns(address from, address to, uint256 value, uint256 timestamp) {
-        Transaction storage tx = transactions[id];
-        return (tx.from, tx.to, tx.value, tx.timestamp);
+    function getTransaction(uint256 txId) public view returns(bool exist, uint256 idOfTx, address from, address to, uint256 value, uint256 timestamp) {
+        if(!isExistTransaction(txId)) {
+            (exist, idOfTx) = (false, txId);
+            return;
+        }
+        Transaction storage tx = transactions[txId];
+        return (true, txId, tx.from, tx.to, tx.value, tx.timestamp);
     }
 
     function isExistTransactionBySender(address addr, uint256 txId) view private returns(bool) {
