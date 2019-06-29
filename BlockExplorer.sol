@@ -9,5 +9,8 @@ contract BlockExplorer {
         string hash;
     }
 
+    mapping(address => Transaction[]) private addressTransactions;
+    Transaction[] private transactions;
+
     function BlockExplorer() { }
 }
