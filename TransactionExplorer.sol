@@ -17,7 +17,7 @@ contract TransactionExplorer {
 
     function BlockExplorer() { }
 
-    function addTransaction(address _to, uint256 _value) private {
+    function addTransaction(address _to, uint256 _value) internal {
         require(_value > 0);
 
         Transaction tx = Transaction({
