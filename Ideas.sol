@@ -8,7 +8,7 @@ contract Ideas is Owner {
     struct Idea {
         address author;
         string description;
-        uint status;
+        IdeaStatus status;
         uint256 timestamp;
         uint256 numberOfSupporters;
         uint256 numberOfAbstained;
@@ -19,24 +19,28 @@ contract Ideas is Owner {
     }
 
     struct Vote {
-        uint typeId;
+        VoteType voteType;
         string comment;
         address voter;
     }
 
     event AddIdea(address indexed author, string description, uint256 ideaId);
-    event VoteForIdea(address indexed voter, uint256 voteId, uint256 ideaId, uint typeId, string comment);
-    event SetIdeaStatus(uint256 ideaId, uint status);
+    event VoteForIdea(address indexed voter, uint256 voteId, uint256 ideaId, VoteType voteType, string comment);
+    event SetIdeaStatus(uint256 ideaId, IdeaStatus status);
 
-    uint constant DISCUSSION = 1;
-    uint constant SPAM = 2;
-    uint constant REJECTED = 3;
-    uint constant PASSED = 4;
-    uint constant IMPLEMENTED = 5;
-    
-    uint constant SUPPORT = 1;
-    uint constant AGAINST = 2;
-    uint constant ABSTAIN = 3;
+    enum IdeaStatus {
+        DISCUSSION,
+        SPAM,
+        REJECTED,
+        PASSED,
+        IMPLEMENTED
+    }
+
+    enum VoteType {
+        SUPPORT,
+        AGAINST,
+        ABSTAIN
+    }
 
     uint256 numberOfIdeas = 0;
 
@@ -61,18 +65,18 @@ contract Ideas is Owner {
         AddIdea(msg.sender, description, ideaId);
     }
 
-    function voteForIdea(uint typeId, uint256 ideaId, string comment) onlyUnfrozen private {
+    function voteForIdea(VoteType voteType, uint256 ideaId, string comment) onlyUnfrozen private {
         require(isExistIdea(ideaId));
         Idea storage idea = ideas[ideaId];
    
         require(!idea.participants[msg.sender]);
         require(idea.status == DISCUSSION);
 
-        if (typeId == SUPPORT) {
+        if (voteType == VoteType.SUPPORT) {
             idea.numberOfSupporters++;
-        } else if (typeId == AGAINST) {
+        } else if (voteType == VoteType.AGAINST) {
             idea.numberOfVotedAgainst++;
-        } else if (typeId == ABSTAIN) {
+        } else if (voteType == VoteType.ABSTAIN) {
             idea.numberOfAbstained++;
         } else {
             revert();
@@ -83,24 +87,24 @@ contract Ideas is Owner {
         uint256 voteId = idea.numberOfParticipants;
 
         idea.votes[voteId] = Vote({
-            typeId: typeId,
+            voteType: voteType,
             comment: comment,
             voter: msg.sender
         });
         idea.numberOfParticipants++;
-        VoteForIdea(msg.sender, voteId, ideaId, typeId, comment);
+        VoteForIdea(msg.sender, voteId, ideaId, voteType, comment);
     }
 
     function supportIdea(uint256 id, string comment) public {
-        voteForIdea(SUPPORT, id, comment);
+        voteForIdea(VoteType.SUPPORT, id, comment);
     }
 
     function againstIdea(uint256 id, string comment) public {
-        voteForIdea(AGAINST, id, comment);
+        voteForIdea(VoteType.AGAINST, id, comment);
     }
 
     function abstainIdea(uint256 id, string comment) public {
-        voteForIdea(ABSTAIN, id, comment);
+        voteForIdea(VoteType.ABSTAIN, id, comment);
     }
 
     function setIdeaStatus(uint256 ideaId, uint status) onlyOwner public {
@@ -121,12 +125,12 @@ contract Ideas is Owner {
         return (true, ideaId, idea.author, idea.description, idea.status, idea.timestamp, idea.numberOfSupporters, idea.numberOfAbstained, idea.numberOfVotedAgainst, idea.numberOfParticipants);
     }
 
-    function getVote(uint256 ideaId, uint256 voteId) view public returns(bool exist, uint256 idOfIdea, uint256 idOfVote, address voter, uint idOfType, string comment) {
+    function getVote(uint256 ideaId, uint256 voteId) view public returns(bool exist, uint256 idOfIdea, uint256 idOfVote, address voter, VoteType voteType, string comment) {
         if (isExistIdea(ideaId)) {
             Idea storage idea = ideas[ideaId];
             Vote storage vote = idea.votes[voteId];
             if ((voteId < idea.numberOfParticipants) && (voteId >= 0)) {
-                return (true, ideaId, voteId, vote.voter, vote.typeId, vote.comment);
+                return (true, ideaId, voteId, vote.voter, vote.voteType, vote.comment);
             }
         }
         (exist, idOfIdea, idOfVote) = (false, ideaId, voteId);
