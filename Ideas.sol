@@ -1,8 +1,9 @@
 pragma solidity ^0.4.18;
 import "./Owner.sol";
 import "./library/StringUtil.sol";
+import "./Token.sol";
 
-contract Ideas is Owner {
+contract Ideas is Owner, Token {
     using StringUtil for string;
 
     struct Idea {
