@@ -43,7 +43,7 @@ contract Ideas is Owner {
         ABSTAIN
     }
 
-    uint256 numberOfIdeas = 0;
+    uint256 private numberOfIdeas = 0;
 
     mapping (uint256 => Idea) private ideas;
 
@@ -136,5 +136,9 @@ contract Ideas is Owner {
         }
         (exist, ideaId, idOfVote) = (false, _ideaId, _voteId);
         return;
+    }
+
+    function numberOfIdeas() {
+        return numberOfIdeas;
     }
 }
