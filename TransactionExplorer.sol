@@ -32,7 +32,7 @@ contract TransactionExplorer {
         transactions.push(tx);
     }
 
-    function getTransaction(address addr, uint256 id) public view returns(address from, address to, uint256 value, uint256 timestamp) {
+    function getTransactionByAddress(address addr, uint256 id) public view returns(address from, address to, uint256 value, uint256 timestamp) {
         Transaction storage tx = addressTransactions[addr][id];
         return (tx.from, tx.to, tx.value, tx.timestamp);
     }
