@@ -1,6 +1,6 @@
 pragma solidity ^0.4.18;
 
-import "./library/AddressUtil.sol";
+import "../library/AddressUtil.sol";
 
 contract Owner {
     using AddressUtil for address;

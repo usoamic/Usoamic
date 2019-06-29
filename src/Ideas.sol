@@ -1,6 +1,6 @@
 pragma solidity ^0.4.18;
 
-import "./library/StringUtil.sol";
+import "../library/StringUtil.sol";
 import "./Owner.sol";
 
 contract Ideas is Owner {
