@@ -20,7 +20,7 @@ contract Purchases is Notes, Token {
     function makePurchase(string _appId, string _purchaseId, uint256 _cost) onlyUnfrozen public {
         require(!_appId.isEmpty());
         require(!_purchaseId.isEmpty());
-        require(cost > 0);
+        require(_cost > 0);
 
         transfer(owner, _cost);
         Purchase memory purchase = Purchase({
