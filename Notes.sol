@@ -21,6 +21,10 @@ contract Notes {
     mapping(address => Note[]) private addressNotes;
     NoteRef[] notes;
 
+    function addPublicNote(string content) public {
+        addNote(NoteVisibility.PUBLIC, content);
+    }
+
     function addNote(NoteVisibility visibility, string content) private {
         Note memory note = Note({
             visibility: visibility,
