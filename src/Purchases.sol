@@ -15,7 +15,7 @@ contract Purchases is Ideas, Token {
 
     mapping(address => Purchase[]) private purchases;
 
-    function getPurchaseByAddress(address _owner, uint256 _purchaseId) view public returns(bool exist, uint256 idOfPurchase, string appId, uint256 cost, uint256 timestamp) {
+    function getPurchaseByAddress(address _owner, uint256 _purchaseId) view public returns(bool exist, uint256 purchaseId, string appId, uint256 cost, uint256 timestamp) {
         if(!isExistPurchase(_owner, _purchaseId)) {
             (exist, idOfPurchase) = (false, _purchaseId);
         }
