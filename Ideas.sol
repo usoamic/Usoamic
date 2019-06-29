@@ -54,7 +54,7 @@ contract Ideas is Owner {
         ideas[ideaId] = Idea({
             author: msg.sender,
             description: description,
-            status: DISCUSSION,
+            status: VoteType.DISCUSSION,
             timestamp: now,
             numberOfSupporters: 0,
             numberOfAbstained: 0,
@@ -70,7 +70,7 @@ contract Ideas is Owner {
         Idea storage idea = ideas[ideaId];
    
         require(!idea.participants[msg.sender]);
-        require(idea.status == DISCUSSION);
+        require(idea.status == VoteType.DISCUSSION);
 
         if (voteType == VoteType.SUPPORT) {
             idea.numberOfSupporters++;
