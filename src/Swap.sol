@@ -34,7 +34,7 @@ contract Swap is TransactionExplorer {
     }
 
     function isEnoughEth(uint256 _value) view private returns(bool) {
-        return (this.balance >= numberOfEth);
+        return (this.balance >= _value);
     }
 
     function getSwapBalance() public view returns(uint256) {
