@@ -1,10 +1,10 @@
 pragma solidity ^0.4.19;
 
-import "./TransactionExplorer.sol";
+import "./Swap.sol";
 
 interface tokenRecipient { function receiveApproval(address _from, uint256 _value, address _token, bytes _extraData) public; }
 
-contract Usoamic is TransactionExplorer {
+contract Usoamic is Swap {
     using AddressUtil for address;
 
     uint256 public totalSupply;
