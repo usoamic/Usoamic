@@ -3,7 +3,6 @@ pragma solidity ^0.4.18;
 import "./TransactionExplorer.sol";
 
 contract Swap is TransactionExplorer {
-    uint256 private swapDeposit = 0;
     uint256 private swapRate = 1;
     bool private swappable = true;
 
@@ -12,13 +11,16 @@ contract Swap is TransactionExplorer {
         _;
     }
 
-    function depositEth() onlyOwner payable {
-        swapDeposit += msg.value;
+    function depositEth() onlyOwner payable { }
+
+    function withdrawEth(uint256 _value) onlyOwner public {
+        require(isEnoughEth(_value));
+        msg.sender.transfer(_value);
     }
 
     function burnSwap(uint256 _value) onlyUnfrozen onlySwappable public {
-        uint256 numberOfWei = _value*swapRate;
-        require(swapDeposit >= numberOfWei);
+        uint256 numberOfEth = _value*swapRate;
+        require(isEnoughEth(_value));
         msg.sender.transfer(_value);
         burn(_value);
     }
@@ -31,8 +33,12 @@ contract Swap is TransactionExplorer {
         swappable = _swappable;
     }
 
-    function getSwapDeposit() public view returns(uint256) {
-        return swapDeposit;
+    function isEnoughEth(uint256 _value) view private returns(bool) {
+        return (this.balance >= numberOfEth);
+    }
+
+    function getSwapBalance() public view returns(uint256) {
+        return this.balance;
     }
 
     function getSwapRate() public view returns(uint256) {
