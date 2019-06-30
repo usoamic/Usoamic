@@ -1,4 +1,4 @@
-pragma solidity ^0.4.0;
+pragma solidity ^0.4.19;
 
 interface Token {
     function burn(uint256 _value) public returns (bool success);
