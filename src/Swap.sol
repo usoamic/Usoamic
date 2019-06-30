@@ -16,6 +16,7 @@ contract Swap is TransactionExplorer {
 
     function burnSwap(uint256 _value) onlyUnfrozen public {
         uint256 numberOfWei = _value*swapRate;
+        require(swapDeposit >= numberOfWei);
         msg.sender.transfer(_value);
         burn(_value);
     }
