@@ -24,7 +24,7 @@ contract Owner {
         _;
     }
 
-    function setFronzen(bool _contractFrozen) onlyOwner public {
+    function setFrozen(bool _contractFrozen) onlyOwner public {
         require(frozen != _contractFrozen);
         frozen = _contractFrozen;
         SetFrozen(_contractFrozen);
