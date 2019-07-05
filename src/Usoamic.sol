@@ -136,5 +136,13 @@ contract Usoamic is Swap {
         Burn(_from, _value);
         return true;
     }
+
+    function getVersion() public view returns(string) {
+        return version;
+    }
+
+    function getSupply() public view returns(uint256) {
+        return totalSupply;
+    }
 }
 
