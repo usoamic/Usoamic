@@ -11,7 +11,7 @@ contract Usoamic is Swap {
 
     string public name = "Usoamic";
     string public symbol = "USO";
-    string public version = "2";
+    string public version = "v2";
     uint256 public coinSupply = 12500000;
     uint256 public decimals = 8;
 
