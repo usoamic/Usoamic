@@ -23,7 +23,7 @@ contract Purchases is Notes, Token {
         require(!_purchaseId.isEmpty());
         require(_cost > 0);
 
-        transfer(owner, _cost);
+        transfer(getOwner(), _cost);
 
         uint256 numberOfPurchase = numberOfPurchases[msg.sender];
 
