@@ -4,11 +4,12 @@ import "../library/AddressUtil.sol";
 
 contract Owner {
     using AddressUtil for address;
+
     event SetFrozen(bool contractFrozen);
     event SetOwner(address indexed newOwner);
 
-    address public owner;
-    bool public frozen = false;
+    address private owner;
+    bool private frozen = false;
 
     function Owner() public {
         owner = msg.sender;
@@ -34,5 +35,13 @@ contract Owner {
         require((owner != _newOwner) && (!_newOwner.isEmpty()));
         owner = _newOwner;
         SetOwner(_newOwner);
+    }
+
+    function getFrozen() public view returns(bool) {
+        return frozen;
+    }
+
+    function getOwner() public view returns(address) {
+        return owner;
     }
 }
