@@ -12,6 +12,7 @@ contract Ideas is Owner {
     }
 
     struct Idea {
+        uint256 refId;
         address author;
         string description;
         IdeaStatus status;
@@ -60,6 +61,7 @@ contract Ideas is Owner {
 
         addressIdeas[msg.sender][numberOfSenderIdeas] = Idea({
             author: msg.sender,
+            refId: numberOfIdeas,
             description: _description,
             status: IdeaStatus.DISCUSSION,
             timestamp: now,
