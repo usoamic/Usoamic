@@ -7,7 +7,7 @@ contract Ideas is Owner {
     using StringUtil for string;
 
     struct IdeaRef {
-        uint256 noteId;
+        uint256 ideaId;
         address author;
     }
 
@@ -72,7 +72,7 @@ contract Ideas is Owner {
         });
 
         ideas[numberOfIdeas] = IdeaRef({
-            noteId: numberOfSenderIdeas,
+            ideaId: numberOfSenderIdeas,
             author: msg.sender
         });
 
