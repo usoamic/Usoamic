@@ -7,7 +7,7 @@ contract Swap is TransactionExplorer {
     bool private swappable = true;
 
     modifier onlySwappable {
-        require(!swappable);
+        require(swappable);
         _;
     }
 
