@@ -33,6 +33,7 @@ contract Ideas is Owner {
     }
 
     struct Vote {
+        uint256 refId;
         VoteType voteType;
         string comment;
         address voter;
@@ -113,6 +114,7 @@ contract Ideas is Owner {
         uint256 numberOfSenderVotes = idea.numberOfVotesByAddress[msg.sender];
 
         idea.addressVotes[msg.sender][numberOfParticipants] = Vote({
+            refId: numberOfParticipants,
             voteType: _voteType,
             comment: _comment,
             voter: msg.sender
