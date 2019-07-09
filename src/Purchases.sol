@@ -42,6 +42,7 @@ contract Purchases is Notes, Token {
     function getPurchaseByAddress(address _owner, uint256 _id) view public returns(bool exist, uint256 id, string purchaseId, string appId, uint256 cost, uint256 timestamp) {
         if(!isExistPurchase(_owner, _id)) {
             (exist, id) = (false, _id);
+            return;
         }
         Purchase storage purchase = purchases[_owner][_id];
         return (true, _id, purchase.purchaseId, purchase.appId, purchase.cost, purchase.timestamp);
