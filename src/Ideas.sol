@@ -137,13 +137,23 @@ contract Ideas is Owner {
         return ((_ideaId < numberOfIdeas[_author]) && (_ideaId >= 0));
     }
 
-    function getIdea(uint256 _ideaId) view public returns(bool exist, uint256 ideaId, address author, string description, IdeaStatus ideaStatus, uint256 timestamp, uint256 numberOfSupporters, uint256 numberOfAbstained, uint256 numberOfVotedAgainst, uint256 numberOfParticipants) {
+    function getIdea(uint256 _ideaId) view public returns(bool exist, uint256 ideaId, uint256 refId, address author, string description, IdeaStatus ideaStatus, uint256 timestamp, uint256 numberOfSupporters, uint256 numberOfAbstained, uint256 numberOfVotedAgainst, uint256 numberOfParticipants) {
         if (!isExistIdea(_ideaId)) {
             (exist, ideaId) = (false, _ideaId);
             return;
         }
-        Idea storage idea = ideas[_ideaId];
-        return (true, _ideaId, idea.author, idea.description, idea.status, idea.timestamp, idea.numberOfSupporters, idea.numberOfAbstained, idea.numberOfVotedAgainst, idea.numberOfParticipants);
+        IdeaRef storage ideaRef = ideas[_ideaId];
+        return getIdeaByAddress(ideaRef.author, ideaRef.ideaId);
+    }
+
+    function getIdeaByAddress(address _author, uint256 _ideaId) view public returns(bool exist, uint256 ideaId, uint256 refId, address author, string description, IdeaStatus ideaStatus, uint256 timestamp, uint256 numberOfSupporters, uint256 numberOfAbstained, uint256 numberOfVotedAgainst, uint256 numberOfParticipants) {
+        if(!isExistIdeaByAuthor(_author, _ideaId)) {
+            (exist, ideaId) = (false, _ideaId);
+            return;
+        }
+        Idea storage idea = addressIdeas[_author][_ideaId];
+        return (true, _ideaId, idea.refId, idea.author, idea.description, idea.status, idea.timestamp, idea.numberOfSupporters, idea.numberOfAbstained, idea.numberOfVotedAgainst, idea.numberOfParticipants);
+
     }
 
     function getVote(uint256 _ideaId, uint256 _voteId) view public returns(bool exist, uint256 ideaId, uint256 voteId, address voter, VoteType voteType, string comment) {
