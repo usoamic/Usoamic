@@ -178,16 +178,17 @@ contract Ideas is Owner {
     function getVote(uint256 _ideaId, uint256 _voteId) view public returns(bool exist, uint256 ideaId, uint256 voteId, address voter, VoteType voteType, string comment) {
         if (isExistIdea(_ideaId)) {
             Idea storage idea = ideas[_ideaId];
-            Vote storage vote = idea.votes[_voteId];
+
             if ((_voteId < idea.numberOfParticipants) && (_voteId >= 0)) {
-                return (true, _ideaId, _voteId, vote.voter, vote.voteType, vote.comment);
+                VoteRef storage voteRef = idea.votes[_voteId];
+                return getVoteByAddress(_ideaId, voteRef.voter, voteRef.voteId);
             }
         }
         (exist, ideaId, voteId) = (false, _ideaId, _voteId);
         return;
     }
 
-    function getVoteByAddress(address _voter, uint256 _ideaId, uint256 _voteId) view public returns(bool exist, uint256 ideaId, uint256 voteId, address voter, VoteType voteType, string comment) {
+    function getVoteByAddress(uint256 _ideaId, address _voter, uint256 _voteId) view public returns(bool exist, uint256 ideaId, uint256 voteId, address voter, VoteType voteType, string comment) {
         if (isExistIdea(_ideaId)) {
 
             Idea storage idea = ideas[_ideaId];
