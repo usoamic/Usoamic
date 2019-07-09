@@ -4,7 +4,7 @@ import "./TransactionExplorer.sol";
 
 contract Swap is TransactionExplorer {
     uint256 private swapRate = 1;
-    bool private swappable = true;
+    bool private swappable = false;
 
     modifier onlySwappable {
         require(swappable);
