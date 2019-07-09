@@ -11,7 +11,7 @@ contract Swap is TransactionExplorer {
         _;
     }
 
-    function depositEth() onlyOwner payable { }
+    function () onlyOwner payable public { }
 
     function withdrawEth(uint256 _value) onlyOwner public {
         require(isEnoughEth(_value));
