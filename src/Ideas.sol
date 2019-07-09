@@ -11,6 +11,11 @@ contract Ideas is Owner {
         address author;
     }
 
+    struct VoteRef {
+        uint256 voteId;
+        address voter;
+    }
+
     struct Idea {
         uint256 refId;
         address author;
@@ -21,7 +26,8 @@ contract Ideas is Owner {
         uint256 numberOfAbstained;
         uint256 numberOfVotedAgainst;
         uint256 numberOfParticipants;
-        mapping (uint256 => Vote) votes;
+        mapping (address => Vote) addressVotes;
+        mapping (uint256 => VoteRef) votes;
         mapping (address => bool) participants;
     }
 
