@@ -6,6 +6,11 @@ import "./Owner.sol";
 contract Ideas is Owner {
     using StringUtil for string;
 
+    struct IdeaRef {
+        uint256 noteId;
+        address author;
+    }
+
     struct Idea {
         address author;
         string description;
@@ -45,7 +50,8 @@ contract Ideas is Owner {
 
     uint256 private numberOfIdeas = 0;
 
-    mapping (uint256 => Idea) private ideas;
+    mapping (uint256 => IdeaRef) private ideas;
+    mapping (address => mapping(uint256 => Idea)) private addressIdeas;
 
     function addIdea(string _description) onlyUnfrozen public {
         require(!_description.isEmpty());
