@@ -133,6 +133,10 @@ contract Ideas is Owner {
         return ((_ideaId < numberOfIdeas) && (_ideaId >= 0));
     }
 
+    function isExistIdeaByAuthor(address _author, uint256 _ideaId) view private returns(bool) {
+        return ((_ideaId < numberOfIdeas[_author]) && (_ideaId >= 0));
+    }
+
     function getIdea(uint256 _ideaId) view public returns(bool exist, uint256 ideaId, address author, string description, IdeaStatus ideaStatus, uint256 timestamp, uint256 numberOfSupporters, uint256 numberOfAbstained, uint256 numberOfVotedAgainst, uint256 numberOfParticipants) {
         if (!isExistIdea(_ideaId)) {
             (exist, ideaId) = (false, _ideaId);
