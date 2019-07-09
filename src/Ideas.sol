@@ -191,6 +191,10 @@ contract Ideas is Owner {
         return numberOfIdeas;
     }
 
+    function getNumberOfVotesByAddress(address _voter, uint256 _ideaId) {
+        return ideas[_ideaId].numberOfVotesByAddress[_voter];
+    }
+
     function getNumberOfIdeas(address _author) view public returns (uint256) {
         return numberOfIdeasByAddress[_author];
     }
