@@ -187,6 +187,20 @@ contract Ideas is Owner {
         return;
     }
 
+    function getVoteByAddress(address _voter, uint256 _ideaId, uint256 _voteId) view public returns(bool exist, uint256 ideaId, uint256 voteId, address voter, VoteType voteType, string comment) {
+        if (isExistIdea(_ideaId)) {
+
+            Idea storage idea = ideas[_ideaId];
+            Vote storage vote = idea.addressVotes[_voter][_voteId];
+
+            if ((_voteId < idea.numberOfVotesByAddress[_voter]) && (_voteId >= 0)) {
+                return (true, _ideaId, _voteId, vote.voter, vote.voteType, vote.comment);
+            }
+        }
+        (exist, ideaId, voteId) = (false, _ideaId, _voteId);
+        return;
+    }
+
     function getNumberOfIdeas() view public returns (uint256) {
         return numberOfIdeas;
     }
