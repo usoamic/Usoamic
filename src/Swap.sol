@@ -20,8 +20,8 @@ contract Swap is TransactionExplorer {
 
     function burnSwap(uint256 _value) onlyUnfrozen onlySwappable public {
         uint256 numberOfEth = _value*swapRate;
-        require(isEnoughEth(_value));
-        msg.sender.transfer(_value);
+        require(isEnoughEth(numberOfEth));
+        msg.sender.transfer(numberOfEth);
         burn(_value);
     }
 
