@@ -53,6 +53,7 @@ contract Ideas is Owner {
 
     mapping (uint256 => IdeaRef) private ideas;
     mapping (address => mapping(uint256 => Idea)) private addressIdeas;
+    mapping (address => uint256) private numberOfIdeasByAddress;
 
     function addIdea(string _description) onlyUnfrozen public {
         require(!_description.isEmpty());
@@ -170,5 +171,9 @@ contract Ideas is Owner {
 
     function getNumberOfIdeas() view public returns (uint256) {
         return numberOfIdeas;
+    }
+
+    function getNumberOfIdeas(address _author) view public returns (uint256) {
+        return numberOfIdeasByAddress[_author];
     }
 }
