@@ -37,6 +37,10 @@ contract Swap is TransactionExplorer {
         return (this.balance >= _value);
     }
 
+    function getSwappable() public view returns(bool) {
+        return swappable;
+    }
+
     function getSwapBalance() public view returns(uint256) {
         return this.balance;
     }
