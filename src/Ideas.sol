@@ -109,14 +109,23 @@ contract Ideas is Owner {
 
         idea.participants[msg.sender] = true;
 
-        uint256 voteId = idea.numberOfParticipants;
+        uint256 numberOfParticipants = idea.numberOfParticipants;
+        uint256 numberOfSenderVotes = idea.numberOfVotesByAddress[msg.sender];
 
-        idea.votes[voteId] = Vote({
+        idea.addressVotes[msg.sender][numberOfParticipants] = Vote({
             voteType: _voteType,
             comment: _comment,
             voter: msg.sender
         });
+
+        idea.votes[numberOfParticipants] = VoteRef({
+            voteId: numberOfSenderVotes,
+            voter: msg.sender
+        });
+
         idea.numberOfParticipants++;
+        idea.numberOfVotesByAddress[msg.sender]++;
+
         VoteForIdea(msg.sender, voteId, _ideaId, _voteType, _comment);
     }
 
