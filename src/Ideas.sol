@@ -17,7 +17,7 @@ contract Ideas is Owner {
     }
 
     struct Idea {
-        uint256 refId;
+        uint256 ideaRefId;
         address author;
         string description;
         IdeaStatus status;
@@ -33,7 +33,7 @@ contract Ideas is Owner {
     }
 
     struct Vote {
-        uint256 refId;
+        uint256 voteRefId;
         VoteType voteType;
         string comment;
         address voter;
@@ -41,7 +41,7 @@ contract Ideas is Owner {
 
     event AddIdea(address indexed author, string description, uint256 ideaId);
     event VoteForIdea(address indexed voter, uint256 voteId, uint256 ideaRefId, VoteType voteType, string comment);
-    event SetIdeaStatus(uint256 refId, IdeaStatus status);
+    event SetIdeaStatus(uint256 ideaRefId, IdeaStatus status);
 
     enum IdeaStatus {
         DISCUSSION,
@@ -67,11 +67,11 @@ contract Ideas is Owner {
         require(!_description.isEmpty());
 
         uint256 ideaId = numberOfIdeasByAddress[msg.sender];
-        uint256 refId = numberOfIdeas;
+        uint256 ideaRefId = numberOfIdeas;
 
         addressIdeas[msg.sender][ideaId] = Idea({
             author: msg.sender,
-            refId: refId,
+            ideaRefId: ideaRefId,
             description: _description,
             status: IdeaStatus.DISCUSSION,
             timestamp: now,
@@ -81,7 +81,7 @@ contract Ideas is Owner {
             numberOfParticipants: 0
         });
 
-        ideas[refId] = IdeaRef({
+        ideas[ideaRefId] = IdeaRef({
             ideaId: ideaId,
             author: msg.sender
         });
@@ -112,17 +112,17 @@ contract Ideas is Owner {
 
         idea.participants[msg.sender] = true;
 
-        uint256 refId = idea.numberOfParticipants;
+        uint256 voteRefId = idea.numberOfParticipants;
         uint256 voteId = idea.numberOfVotesByAddress[msg.sender];
 
         idea.addressVotes[msg.sender][voteId] = Vote({
-            refId: refId,
+            voteRefId: voteRefId,
             voteType: _voteType,
             comment: _comment,
             voter: msg.sender
         });
 
-        idea.votes[refId] = VoteRef({
+        idea.votes[voteRefId] = VoteRef({
             voteId: voteId,
             voter: msg.sender
         });
@@ -130,7 +130,7 @@ contract Ideas is Owner {
         idea.numberOfParticipants++;
         idea.numberOfVotesByAddress[msg.sender]++;
 
-        VoteForIdea(msg.sender, voteId, refId, _voteType, _comment);
+        VoteForIdea(msg.sender, voteId, _ideaRefId, _voteType, _comment);
     }
 
     function supportIdea(uint256 _ideaRefId, string _comment) public {
@@ -159,7 +159,7 @@ contract Ideas is Owner {
         return ((_ideaId < numberOfIdeasByAddress[_author]) && (_ideaId >= 0));
     }
 
-    function getIdea(uint256 _ideaRefId) view public returns(bool exist, uint256 ideaId, uint256 refId, address author, string description, IdeaStatus ideaStatus, uint256 timestamp, uint256 numberOfSupporters, uint256 numberOfAbstained, uint256 numberOfVotedAgainst, uint256 numberOfParticipants) {
+    function getIdea(uint256 _ideaRefId) view public returns(bool exist, uint256 ideaId, uint256 ideaRefId, address author, string description, IdeaStatus ideaStatus, uint256 timestamp, uint256 numberOfSupporters, uint256 numberOfAbstained, uint256 numberOfVotedAgainst, uint256 numberOfParticipants) {
         if (!isExistIdea(_ideaRefId)) {
             (exist, ideaId) = (false, _ideaRefId);
             return;
@@ -168,13 +168,13 @@ contract Ideas is Owner {
         return getIdeaByAddress(ideaRef.author, ideaRef.ideaId);
     }
 
-    function getIdeaByAddress(address _author, uint256 _ideaId) view public returns(bool exist, uint256 ideaId, uint256 refId, address author, string description, IdeaStatus ideaStatus, uint256 timestamp, uint256 numberOfSupporters, uint256 numberOfAbstained, uint256 numberOfVotedAgainst, uint256 numberOfParticipants) {
+    function getIdeaByAddress(address _author, uint256 _ideaId) view public returns(bool exist, uint256 ideaId, uint256 ideaRefId, address author, string description, IdeaStatus ideaStatus, uint256 timestamp, uint256 numberOfSupporters, uint256 numberOfAbstained, uint256 numberOfVotedAgainst, uint256 numberOfParticipants) {
         if(!isExistIdeaByAuthor(_author, _ideaId)) {
             (exist, ideaId) = (false, _ideaId);
             return;
         }
         Idea storage idea = addressIdeas[_author][_ideaId];
-        return (true, _ideaId, idea.refId, idea.author, idea.description, idea.status, idea.timestamp, idea.numberOfSupporters, idea.numberOfAbstained, idea.numberOfVotedAgainst, idea.numberOfParticipants);
+        return (true, _ideaId, idea.ideaRefId, idea.author, idea.description, idea.status, idea.timestamp, idea.numberOfSupporters, idea.numberOfAbstained, idea.numberOfVotedAgainst, idea.numberOfParticipants);
 
     }
 
