@@ -111,25 +111,25 @@ contract Ideas is Owner {
 
         idea.participants[msg.sender] = true;
 
-        uint256 numberOfParticipants = idea.numberOfParticipants;
-        uint256 numberOfSenderVotes = idea.numberOfVotesByAddress[msg.sender];
+        uint256 refId = idea.numberOfParticipants;
+        uint256 voteId = idea.numberOfVotesByAddress[msg.sender];
 
-        idea.addressVotes[msg.sender][numberOfParticipants] = Vote({
-            refId: numberOfParticipants,
+        idea.addressVotes[msg.sender][voteId] = Vote({
+            refId: refId,
             voteType: _voteType,
             comment: _comment,
             voter: msg.sender
         });
 
-        idea.votes[numberOfParticipants] = VoteRef({
-            voteId: numberOfSenderVotes,
+        idea.votes[refId] = VoteRef({
+            voteId: voteId,
             voter: msg.sender
         });
 
         idea.numberOfParticipants++;
         idea.numberOfVotesByAddress[msg.sender]++;
 
-        VoteForIdea(msg.sender, voteId, _ideaId, _voteType, _comment);
+        VoteForIdea(msg.sender, voteId, refId, _voteType, _comment);
     }
 
     function supportIdea(uint256 _ideaId, string _comment) public {
