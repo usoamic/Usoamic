@@ -26,7 +26,7 @@ contract Ideas is Owner {
         uint256 numberOfAbstained;
         uint256 numberOfVotedAgainst;
         uint256 numberOfParticipants;
-        mapping (address => Vote) addressVotes;
+        mapping (address => mapping(uint256 => Vote)) addressVotes;
         mapping (uint256 => VoteRef) votes;
         mapping (address => uint256) numberOfVotesByAddress;
         mapping (address => bool) participants;
