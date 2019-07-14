@@ -11,7 +11,7 @@ contract Notes is Ideas {
     }
 
     struct Note {
-        uint256 refId;
+        uint256 noteRefId;
         address author;
         string content;
         uint256 timestamp;
@@ -23,7 +23,7 @@ contract Notes is Ideas {
         address author;
     }
 
-    event AddNote(address indexed author, uint256 refId, string content, uint256 timestamp);
+    event AddNote(address indexed author, uint256 noteRefId, string content, uint256 timestamp);
 
     mapping(address => uint256) private numberOfNotes;
     mapping(address => mapping(uint256 => Note)) private addressNotes;
@@ -45,7 +45,7 @@ contract Notes is Ideas {
         uint256 numberOfSenderNotes = numberOfNotes[msg.sender];
 
         addressNotes[msg.sender][numberOfSenderNotes] = Note({
-            refId: (_visibility == NoteVisibility.PUBLIC) ?  numberOfPublicNotes : 0,
+            noteRefId: (_visibility == NoteVisibility.PUBLIC) ?  numberOfPublicNotes : 0,
             visibility: _visibility,
             author: msg.sender,
             content: _content,
@@ -64,16 +64,16 @@ contract Notes is Ideas {
         numberOfNotes[msg.sender]++;
     }
 
-    function getNoteByAddress(address _author, uint256 _noteId) view public returns(bool exist, uint256 noteId, NoteVisibility visibility, uint256 refId, string content, address author, uint256 timestamp) {
+    function getNoteByAddress(address _author, uint256 _noteId) view public returns(bool exist, uint256 noteId, NoteVisibility visibility, uint256 noteRefId, string content, address author, uint256 timestamp) {
         if (!isExistNoteByAuthor(_author, _noteId)) {
             (exist, noteId) = (false, _noteId);
             return;
         }
         Note storage note = addressNotes[_author][_noteId];
-        return (true, _noteId, note.visibility, note.refId, note.content, note.author, note.timestamp);
+        return (true, _noteId, note.visibility, note.noteRefId, note.content, note.author, note.timestamp);
     }
 
-    function getNote(uint256 _noteId) view public returns(bool exist, uint256 noteId, NoteVisibility visibility, uint256 refId, string content, address author, uint256 timestamp) {
+    function getNote(uint256 _noteId) view public returns(bool exist, uint256 noteId, NoteVisibility visibility, uint256 noteRefId, string content, address author, uint256 timestamp) {
         if(!isExistNoteRef(_noteId)) {
             (exist, noteId) = (false, _noteId);
             return;
