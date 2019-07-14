@@ -39,7 +39,7 @@ contract Ideas is Owner {
         address voter;
     }
 
-    event AddIdea(address indexed author, string description, uint256 ideaId);
+    event AddIdea(address indexed author, string description, uint256 refId, uint256 ideaId);
     event VoteForIdea(address indexed voter, uint256 voteId, uint256 ideaId, VoteType voteType, string comment);
     event SetIdeaStatus(uint256 ideaId, IdeaStatus status);
 
