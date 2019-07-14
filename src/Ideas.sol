@@ -180,7 +180,8 @@ contract Ideas is Owner {
 
     function getVote(uint256 _ideaId, uint256 _voteId) view public returns(bool exist, uint256 ideaId, uint256 voteId, address voter, VoteType voteType, string comment) {
         if (isExistIdea(_ideaId)) {
-            Idea storage idea = ideas[_ideaId];
+            IdeaRef storage ideaRef = ideas[_ideaId];
+            Idea storage idea = addressIdeas[ideaRef.author][ideaRef.ideaId];
 
             if ((_voteId < idea.numberOfParticipants) && (_voteId >= 0)) {
                 VoteRef storage voteRef = idea.votes[_voteId];
@@ -193,8 +194,8 @@ contract Ideas is Owner {
 
     function getVoteByAddress(uint256 _ideaId, address _voter, uint256 _voteId) view public returns(bool exist, uint256 ideaId, uint256 voteId, address voter, VoteType voteType, string comment) {
         if (isExistIdea(_ideaId)) {
-
-            Idea storage idea = ideas[_ideaId];
+            IdeaRef storage ideaRef = ideas[_ideaId];
+            Idea storage idea = addressIdeas[ideaRef.author][ideaRef.ideaId];
             Vote storage vote = idea.addressVotes[_voter][_voteId];
 
             if ((_voteId < idea.numberOfVotesByAddress[_voter]) && (_voteId >= 0)) {
@@ -209,8 +210,9 @@ contract Ideas is Owner {
         return numberOfIdeas;
     }
 
-    function getNumberOfVotesByAddress(address _voter, uint256 _ideaId) {
-        return ideas[_ideaId].numberOfVotesByAddress[_voter];
+    function getNumberOfVotesByAddress(address _voter, uint256 _ideaId) view public returns (uint256) {
+        IdeaRef storage ideaRef = ideas[_ideaId];
+        return addressIdeas[ideaRef.author][ideaRef.ideaId].numberOfVotesByAddress[_voter];
     }
 
     function getNumberOfIdeas(address _author) view public returns (uint256) {
