@@ -156,7 +156,7 @@ contract Ideas is Owner {
     }
 
     function isExistIdeaByAuthor(address _author, uint256 _ideaId) view private returns(bool) {
-        return ((_ideaId < numberOfIdeas[_author]) && (_ideaId >= 0));
+        return ((_ideaId < numberOfIdeasByAddress[_author]) && (_ideaId >= 0));
     }
 
     function getIdea(uint256 _ideaId) view public returns(bool exist, uint256 ideaId, uint256 refId, address author, string description, IdeaStatus ideaStatus, uint256 timestamp, uint256 numberOfSupporters, uint256 numberOfAbstained, uint256 numberOfVotedAgainst, uint256 numberOfParticipants) {
