@@ -94,8 +94,9 @@ contract Ideas is Owner {
 
     function voteForIdea(VoteType _voteType, uint256 _ideaId, string _comment) onlyUnfrozen private {
         require(isExistIdea(_ideaId));
-        Idea storage idea = ideas[_ideaId];
-   
+        IdeaRef storage ideaRef = ideas[_ideaId];
+        Idea storage idea = addressIdeas[ideaRef.author][ideaRef.ideaId];
+
         require(!idea.participants[msg.sender]);
         require(idea.status == IdeaStatus.DISCUSSION);
 
