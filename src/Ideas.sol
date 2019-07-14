@@ -66,9 +66,9 @@ contract Ideas is Owner {
     function addIdea(string _description) onlyUnfrozen public {
         require(!_description.isEmpty());
 
-        uint numberOfSenderIdeas = numberOfIdeasByAddress[msg.sender];
+        uint ideaId = numberOfIdeasByAddress[msg.sender];
 
-        addressIdeas[msg.sender][numberOfSenderIdeas] = Idea({
+        addressIdeas[msg.sender][ideaId] = Idea({
             author: msg.sender,
             refId: numberOfIdeas,
             description: _description,
@@ -81,14 +81,14 @@ contract Ideas is Owner {
         });
 
         ideas[numberOfIdeas] = IdeaRef({
-            ideaId: numberOfSenderIdeas,
+            ideaId: ideaId,
             author: msg.sender
         });
 
+        AddIdea(msg.sender, _description, numberOfIdeas, numberOfSenderIdeas);
+
         numberOfIdeas++;
         numberOfIdeasByAddress[msg.sender]++;
-
-        AddIdea(msg.sender, _description, ideaId);
     }
 
     function voteForIdea(VoteType _voteType, uint256 _ideaId, string _comment) onlyUnfrozen private {
