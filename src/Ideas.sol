@@ -146,7 +146,8 @@ contract Ideas is Owner {
     }
 
     function setIdeaStatus(uint256 _ideaId, IdeaStatus _status) onlyOwner public {
-        ideas[_ideaId].status = _status;
+        IdeaRef storage ideaRef = ideas[_ideaId];
+        addressIdeas[ideaRef.author][ideaRef.ideaId].status = _status;
         SetIdeaStatus(_ideaId, _status);
     }
 
