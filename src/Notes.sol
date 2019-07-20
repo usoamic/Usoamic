@@ -73,12 +73,12 @@ contract Notes is Ideas {
         return (true, _noteId, note.visibility, note.noteRefId, note.content, note.author, note.timestamp);
     }
 
-    function getNote(uint256 _noteId) view public returns(bool exist, uint256 noteId, NoteVisibility visibility, uint256 noteRefId, string content, address author, uint256 timestamp) {
-        if(!isExistNoteRef(_noteId)) {
-            (exist, noteId) = (false, _noteId);
+    function getNote(uint256 _noteRefId) view public returns(bool exist, uint256 noteId, NoteVisibility visibility, uint256 noteRefId, string content, address author, uint256 timestamp) {
+        if(!isExistNoteRef(_noteRefId)) {
+            (exist, noteId) = (false, _noteRefId);
             return;
         }
-        NoteRef storage noteRef = notes[_noteId];
+        NoteRef storage noteRef = notes[_noteRefId];
         return getNoteByAddress(noteRef.author, noteRef.noteId);
     }
 
@@ -94,7 +94,7 @@ contract Notes is Ideas {
         return ((_noteId < numberOfNotes[_author]) && (_noteId >= 0));
     }
 
-    function isExistNoteRef(uint256 _noteId) view private returns(bool) {
-        return ((_noteId < numberOfPublicNotes) && (_noteId >= 0));
+    function isExistNoteRef(uint256 _noteRefId) view private returns(bool) {
+        return ((_noteRefId < numberOfPublicNotes) && (_noteRefId >= 0));
     }
 }
