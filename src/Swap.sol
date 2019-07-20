@@ -3,7 +3,7 @@ pragma solidity ^0.4.18;
 import "./TransactionExplorer.sol";
 
 contract Swap is TransactionExplorer {
-    uint256 private swapRate = 1;
+    uint256 private swapRate = 40000000;
     bool private swappable = false;
 
     modifier onlySwappable {
