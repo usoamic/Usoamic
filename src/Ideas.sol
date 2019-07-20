@@ -215,7 +215,7 @@ contract Ideas is Owner {
         return addressIdeas[ideaRef.author][ideaRef.ideaId].numberOfVotesByAddress[_voter];
     }
 
-    function getNumberOfIdeas(address _author) view public returns (uint256) {
+    function getNumberOfIdeasAddress(address _author) view public returns (uint256) {
         return numberOfIdeasByAddress[_author];
     }
 }
