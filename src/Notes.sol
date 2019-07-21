@@ -64,7 +64,7 @@ contract Notes is Ideas {
         numberOfNotes[msg.sender]++;
     }
 
-    function getNoteByAddress(address _author, uint256 _noteId) view public returns(bool exist, uint256 noteId, NoteVisibility visibility, uint256 noteRefId, string content, address author, uint256 timestamp) {
+    function getNoteByAuthor(address _author, uint256 _noteId) view public returns(bool exist, uint256 noteId, NoteVisibility visibility, uint256 noteRefId, string content, address author, uint256 timestamp) {
         if (!isExistNoteByAuthor(_author, _noteId)) {
             (exist, noteId) = (false, _noteId);
             return;
@@ -79,14 +79,14 @@ contract Notes is Ideas {
             return;
         }
         NoteRef storage noteRef = notes[_noteRefId];
-        return getNoteByAddress(noteRef.author, noteRef.noteId);
+        return getNoteByAuthor(noteRef.author, noteRef.noteId);
     }
 
     function getNumberOfPublicNotes() view public returns (uint256) {
         return numberOfPublicNotes;
     }
 
-    function getNumberOfNotesByAddress(address _author) view public returns (uint256) {
+    function getNumberOfNotesByAuthor(address _author) view public returns (uint256) {
         return numberOfNotes[_author];
     }
 
