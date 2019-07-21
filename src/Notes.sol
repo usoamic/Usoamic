@@ -26,7 +26,7 @@ contract Notes is Ideas {
     event AddNote(address indexed author, uint256 noteRefId, string content, uint256 timestamp);
 
     mapping(address => uint256) private numberOfNotes;
-    mapping(address => mapping(uint256 => Note)) private addressNotes;
+    mapping(address => mapping(uint256 => Note)) private authorNotes;
     mapping(uint256 => NoteRef) private notes;
 
     uint256 private numberOfPublicNotes = 0;
@@ -44,7 +44,7 @@ contract Notes is Ideas {
 
         uint256 numberOfSenderNotes = numberOfNotes[msg.sender];
 
-        addressNotes[msg.sender][numberOfSenderNotes] = Note({
+        authorNotes[msg.sender][numberOfSenderNotes] = Note({
             noteRefId: (_visibility == NoteVisibility.PUBLIC) ?  numberOfPublicNotes : 0,
             visibility: _visibility,
             author: msg.sender,
@@ -69,7 +69,7 @@ contract Notes is Ideas {
             (exist, noteId) = (false, _noteId);
             return;
         }
-        Note storage note = addressNotes[_author][_noteId];
+        Note storage note = authorNotes[_author][_noteId];
         return (true, _noteId, note.visibility, note.noteRefId, note.content, note.author, note.timestamp);
     }
 
