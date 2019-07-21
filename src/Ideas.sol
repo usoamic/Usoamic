@@ -26,9 +26,9 @@ contract Ideas is Owner {
         uint256 numberOfAbstained;
         uint256 numberOfVotedAgainst;
         uint256 numberOfParticipants;
-        mapping (address => mapping(uint256 => Vote)) addressVotes;
+        mapping (address => mapping(uint256 => Vote)) voterVotes;
         mapping (uint256 => VoteRef) votes;
-        mapping (address => uint256) numberOfVotesByAddress;
+        mapping (address => uint256) numberOfVotesByVoter;
         mapping (address => bool) participants;
     }
 
@@ -60,16 +60,16 @@ contract Ideas is Owner {
     uint256 private numberOfIdeas = 0;
 
     mapping (uint256 => IdeaRef) private ideas;
-    mapping (address => mapping(uint256 => Idea)) private addressIdeas;
-    mapping (address => uint256) private numberOfIdeasByAddress;
+    mapping (address => mapping(uint256 => Idea)) private authorIdeas;
+    mapping (address => uint256) private numberOfIdeasByAuthor;
 
     function addIdea(string _description) onlyUnfrozen public {
         require(!_description.isEmpty());
 
-        uint256 ideaId = numberOfIdeasByAddress[msg.sender];
+        uint256 ideaId = numberOfIdeasByAuthor[msg.sender];
         uint256 ideaRefId = numberOfIdeas;
 
-        addressIdeas[msg.sender][ideaId] = Idea({
+        authorIdeas[msg.sender][ideaId] = Idea({
             author: msg.sender,
             ideaRefId: ideaRefId,
             description: _description,
@@ -89,13 +89,13 @@ contract Ideas is Owner {
         AddIdea(msg.sender, _description, ideaId);
 
         numberOfIdeas++;
-        numberOfIdeasByAddress[msg.sender]++;
+        numberOfIdeasByAuthor[msg.sender]++;
     }
 
     function voteForIdea(VoteType _voteType, uint256 _ideaRefId, string _comment) onlyUnfrozen private {
         require(isExistIdea(_ideaRefId));
         IdeaRef storage ideaRef = ideas[_ideaRefId];
-        Idea storage idea = addressIdeas[ideaRef.author][ideaRef.ideaId];
+        Idea storage idea = authorIdeas[ideaRef.author][ideaRef.ideaId];
 
         require(!idea.participants[msg.sender]);
         require(idea.status == IdeaStatus.DISCUSSION);
@@ -113,9 +113,9 @@ contract Ideas is Owner {
         idea.participants[msg.sender] = true;
 
         uint256 voteRefId = idea.numberOfParticipants;
-        uint256 voteId = idea.numberOfVotesByAddress[msg.sender];
+        uint256 voteId = idea.numberOfVotesByVoter[msg.sender];
 
-        idea.addressVotes[msg.sender][voteId] = Vote({
+        idea.voterVotes[msg.sender][voteId] = Vote({
             voteRefId: voteRefId,
             voteType: _voteType,
             comment: _comment,
@@ -128,7 +128,7 @@ contract Ideas is Owner {
         });
 
         idea.numberOfParticipants++;
-        idea.numberOfVotesByAddress[msg.sender]++;
+        idea.numberOfVotesByVoter[msg.sender]++;
 
         VoteForIdea(msg.sender, voteId, _ideaRefId, _voteType, _comment);
     }
@@ -147,7 +147,7 @@ contract Ideas is Owner {
 
     function setIdeaStatus(uint256 _ideaRefId, IdeaStatus _status) onlyOwner public {
         IdeaRef storage ideaRef = ideas[_ideaRefId];
-        addressIdeas[ideaRef.author][ideaRef.ideaId].status = _status;
+        authorIdeas[ideaRef.author][ideaRef.ideaId].status = _status;
         SetIdeaStatus(_ideaRefId, _status);
     }
 
@@ -156,7 +156,7 @@ contract Ideas is Owner {
     }
 
     function isExistIdeaByAuthor(address _author, uint256 _ideaId) view private returns(bool) {
-        return ((_ideaId < numberOfIdeasByAddress[_author]) && (_ideaId >= 0));
+        return ((_ideaId < numberOfIdeasByAuthor[_author]) && (_ideaId >= 0));
     }
 
     function getIdea(uint256 _ideaRefId) view public returns(bool exist, uint256 ideaId, uint256 ideaRefId, address author, string description, IdeaStatus ideaStatus, uint256 timestamp, uint256 numberOfSupporters, uint256 numberOfAbstained, uint256 numberOfVotedAgainst, uint256 numberOfParticipants) {
@@ -165,15 +165,15 @@ contract Ideas is Owner {
             return;
         }
         IdeaRef storage ideaRef = ideas[_ideaRefId];
-        return getIdeaByAddress(ideaRef.author, ideaRef.ideaId);
+        return getIdeaByAuthor(ideaRef.author, ideaRef.ideaId);
     }
 
-    function getIdeaByAddress(address _author, uint256 _ideaId) view public returns(bool exist, uint256 ideaId, uint256 ideaRefId, address author, string description, IdeaStatus ideaStatus, uint256 timestamp, uint256 numberOfSupporters, uint256 numberOfAbstained, uint256 numberOfVotedAgainst, uint256 numberOfParticipants) {
+    function getIdeaByAuthor(address _author, uint256 _ideaId) view public returns(bool exist, uint256 ideaId, uint256 ideaRefId, address author, string description, IdeaStatus ideaStatus, uint256 timestamp, uint256 numberOfSupporters, uint256 numberOfAbstained, uint256 numberOfVotedAgainst, uint256 numberOfParticipants) {
         if(!isExistIdeaByAuthor(_author, _ideaId)) {
             (exist, ideaId) = (false, _ideaId);
             return;
         }
-        Idea storage idea = addressIdeas[_author][_ideaId];
+        Idea storage idea = authorIdeas[_author][_ideaId];
         return (true, _ideaId, idea.ideaRefId, idea.author, idea.description, idea.status, idea.timestamp, idea.numberOfSupporters, idea.numberOfAbstained, idea.numberOfVotedAgainst, idea.numberOfParticipants);
 
     }
@@ -181,24 +181,24 @@ contract Ideas is Owner {
     function getVote(uint256 _ideaRefId, uint256 _voteRefId) view public returns(bool exist, uint256 ideaId, uint256 voteId, address voter, VoteType voteType, string comment) {
         if (isExistIdea(_ideaRefId)) {
             IdeaRef storage ideaRef = ideas[_ideaRefId];
-            Idea storage idea = addressIdeas[ideaRef.author][ideaRef.ideaId];
+            Idea storage idea = authorIdeas[ideaRef.author][ideaRef.ideaId];
 
             if ((_voteRefId < idea.numberOfParticipants) && (_voteRefId >= 0)) {
                 VoteRef storage voteRef = idea.votes[_voteRefId];
-                return getVoteByAddress(_ideaRefId, voteRef.voter, voteRef.voteId);
+                return getVoteByVoter(_ideaRefId, voteRef.voter, voteRef.voteId);
             }
         }
         (exist, ideaId, voteId) = (false, _ideaRefId, _voteRefId);
         return;
     }
 
-    function getVoteByAddress(uint256 _ideaRefId, address _voter, uint256 _voteId) view public returns(bool exist, uint256 ideaId, uint256 voteId, address voter, VoteType voteType, string comment) {
+    function getVoteByVoter(uint256 _ideaRefId, address _voter, uint256 _voteId) view public returns(bool exist, uint256 ideaId, uint256 voteId, address voter, VoteType voteType, string comment) {
         if (isExistIdea(_ideaRefId)) {
             IdeaRef storage ideaRef = ideas[_ideaRefId];
-            Idea storage idea = addressIdeas[ideaRef.author][ideaRef.ideaId];
+            Idea storage idea = authorIdeas[ideaRef.author][ideaRef.ideaId];
 
-            if ((_voteId < idea.numberOfVotesByAddress[_voter]) && (_voteId >= 0)) {
-                Vote storage vote = idea.addressVotes[_voter][_voteId];
+            if ((_voteId < idea.numberOfVotesByVoter[_voter]) && (_voteId >= 0)) {
+                Vote storage vote = idea.voterVotes[_voter][_voteId];
                 return (true, _ideaRefId, _voteId, vote.voter, vote.voteType, vote.comment);
             }
         }
@@ -210,12 +210,12 @@ contract Ideas is Owner {
         return numberOfIdeas;
     }
 
-    function getNumberOfVotesByAddress(address _voter, uint256 _ideaRefId) view public returns (uint256) {
+    function getNumberOfVotesByVoter(address _voter, uint256 _ideaRefId) view public returns (uint256) {
         IdeaRef storage ideaRef = ideas[_ideaRefId];
-        return addressIdeas[ideaRef.author][ideaRef.ideaId].numberOfVotesByAddress[_voter];
+        return authorIdeas[ideaRef.author][ideaRef.ideaId].numberOfVotesByVoter[_voter];
     }
 
-    function getNumberOfIdeasAddress(address _author) view public returns (uint256) {
-        return numberOfIdeasByAddress[_author];
+    function getNumberOfIdeasByAuthor(address _author) view public returns (uint256) {
+        return numberOfIdeasByAuthor[_author];
     }
 }
