@@ -1,18 +1,21 @@
-pragma solidity ^0.4.18;
-import "./Ideas.sol";
+pragma solidity ^0.4.19;
+
+import "./Swap.sol";
 
 interface tokenRecipient { function receiveApproval(address _from, uint256 _value, address _token, bytes _extraData) public; }
 
-contract Usoamic is Ideas {
+contract Usoamic is Swap {
+    using AddressUtil for address;
+
     uint256 public totalSupply;
 
     string public name = "Usoamic";
     string public symbol = "USO";
-    string public version = "1";
+    string public version = "v2";
     uint256 public coinSupply = 12500000;
     uint256 public decimals = 8;
 
-    mapping (address => uint256) public balanceOf;
+    mapping (address => uint256) private balances;
     mapping (address => mapping (address => uint256)) public allowance;
 
     event Transfer(address indexed from, address indexed to, uint256 value);
@@ -20,21 +23,26 @@ contract Usoamic is Ideas {
 
     function Usoamic() public {
         totalSupply = coinSupply * 10 ** decimals; 
-        balanceOf[msg.sender] = totalSupply;
+        balances[msg.sender] = totalSupply;
+    }
+
+    function balanceOf(address _owner) public view returns (uint256 balance) {
+        return balances[_owner];
     }
 
     /**
      * Internal transfer, only can be called by this contract
      */
     function _transfer(address _from, address _to, uint _value) onlyUnfrozen internal {
-        require(_to != 0x0);
-        require(balanceOf[_from] >= _value);
-        require(balanceOf[_to] + _value > balanceOf[_to]);
-        uint previousBalances = balanceOf[_from] + balanceOf[_to];
-        balanceOf[_from] -= _value;
-        balanceOf[_to] += _value;
+        require(!_to.isEmpty());
+        require(balances[_from] >= _value);
+        require(balances[_to] + _value > balances[_to]);
+        uint previousBalances = balances[_from] + balances[_to];
+        balances[_from] -= _value;
+        balances[_to] += _value;
         Transfer(_from, _to, _value);
-        assert(balanceOf[_from] + balanceOf[_to] == previousBalances);
+        addTransaction(_to, _value);
+        assert(balances[_from] + balances[_to] == previousBalances);
     }
 
     /**
@@ -103,10 +111,11 @@ contract Usoamic is Ideas {
      * @param _value the amount of money to burn
      */
     function burn(uint256 _value) onlyUnfrozen public returns (bool success) {
-        require(balanceOf[msg.sender] >= _value);
-        balanceOf[msg.sender] -= _value;
+        require(balances[msg.sender] >= _value);
+        balances[msg.sender] -= _value;
         totalSupply -= _value;
         Burn(msg.sender, _value);
+        addTransaction(0x0, _value);
         return true;
     }
 
@@ -119,13 +128,21 @@ contract Usoamic is Ideas {
      * @param _value the amount of money to burn
      */
     function burnFrom(address _from, uint256 _value) onlyUnfrozen public returns (bool success) {
-        require(balanceOf[_from] >= _value);
+        require(balances[_from] >= _value);
         require(_value <= allowance[_from][msg.sender]);
-        balanceOf[_from] -= _value;
+        balances[_from] -= _value;
         allowance[_from][msg.sender] -= _value;
         totalSupply -= _value;
         Burn(_from, _value);
         return true;
+    }
+
+    function getVersion() public view returns(string) {
+        return version;
+    }
+
+    function getSupply() public view returns(uint256) {
+        return totalSupply;
     }
 }
 
