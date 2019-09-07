@@ -25,11 +25,11 @@ contract TransactionExplorer is Purchases {
         addTransactionToAddress(_to);
 
         transactions[numberOfTransactions] = Transaction({
-            from: msg.sender,
-            to: _to,
-            value: _value,
-            timestamp: now
-        });
+            from : msg.sender,
+            to : _to,
+            value : _value,
+            timestamp : now
+            });
 
         numberOfTransactions++;
     }
@@ -39,8 +39,8 @@ contract TransactionExplorer is Purchases {
         numberOfAddressTransactions[_owner]++;
     }
 
-    function getTransactionByAddress(address _owner, uint256 _txNumber) public view returns(bool exist, uint256 txId, address from, address to, uint256 value, uint256 timestamp) {
-        if(!isExistTransactionBySender(_owner, _txNumber)) {
+    function getTransactionByAddress(address _owner, uint256 _txNumber) view public returns (bool exist, uint256 txId, address from, address to, uint256 value, uint256 timestamp) {
+        if (!isExistTransactionBySender(_owner, _txNumber)) {
             (exist) = (false);
             return;
         }
@@ -48,8 +48,8 @@ contract TransactionExplorer is Purchases {
         return getTransaction(_txId);
     }
 
-    function getTransaction(uint256 _txId) public view returns(bool exist, uint256 txId, address from, address to, uint256 value, uint256 timestamp) {
-        if(!isExistTransaction(_txId)) {
+    function getTransaction(uint256 _txId) view public returns (bool exist, uint256 txId, address from, address to, uint256 value, uint256 timestamp) {
+        if (!isExistTransaction(_txId)) {
             (exist, txId) = (false, _txId);
             return;
         }
@@ -65,11 +65,11 @@ contract TransactionExplorer is Purchases {
         return numberOfAddressTransactions[_owner];
     }
 
-    function isExistTransactionBySender(address _owner, uint256 _txId) view private returns(bool) {
+    function isExistTransactionBySender(address _owner, uint256 _txId) view private returns (bool) {
         return ((_txId < numberOfAddressTransactions[_owner]) && (_txId >= 0));
     }
 
-    function isExistTransaction(uint256 _txId) view private returns(bool) {
+    function isExistTransaction(uint256 _txId) view private returns (bool) {
         return ((_txId < numberOfTransactions) && (_txId >= 0));
     }
 }
