@@ -1,3 +1,3 @@
 # Usoamic
-* Contract address: 0xb894d4329329b6150258c0048f6dfb41257359f5
-* Coin supply: 12500000
+* Contract Address: 0x5e8a925ef8bceeb7d3fde6fedaeb374dcf39e69f (for MainNet and TestNet)
+* Coin Supply: 25000000
